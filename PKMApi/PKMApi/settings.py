@@ -17,6 +17,17 @@ from .config import SECRET_KEY, DATABASES
 # Build paths inside the project like this: BASE_DIR / 'subdir'.
 BASE_DIR = Path(__file__).resolve().parent.parent
 
+from .config import AWS_ACCESS_KEY_ID, AWS_SECRET_ACCESS_KEY, AWS_STORAGE_BUCKET_NAME, AWS_S3_ENDPOINT_URL, AWS_S3_REGION_NAME, DEFAULT_FILE_STORAGE, MEDIA_URL
+
+AWS_ACCESS_KEY_ID = AWS_ACCESS_KEY_ID
+AWS_SECRET_ACCESS_KEY =  AWS_SECRET_ACCESS_KEY
+AWS_STORAGE_BUCKET_NAME =  AWS_STORAGE_BUCKET_NAME
+AWS_S3_ENDPOINT_URL =  AWS_S3_ENDPOINT_URL
+AWS_S3_REGION_NAME =  AWS_S3_REGION_NAME
+
+DEFAULT_FILE_STORAGE = DEFAULT_FILE_STORAGE
+MEDIA_URL = MEDIA_URL
+
 
 # Quick-start development settings - unsuitable for production
 # See https://docs.djangoproject.com/en/5.1/howto/deployment/checklist/
@@ -40,6 +51,7 @@ INSTALLED_APPS = [
     'django.contrib.messages',
     'django.contrib.staticfiles',
     'rest_framework',
+    'Core',
 ]
 
 MIDDLEWARE = [
@@ -84,7 +96,8 @@ DATABASES = DATABASES
 
 AUTH_PASSWORD_VALIDATORS = [
     {
-        'NAME': 'django.contrib.auth.zpassword_validation.UserAttributeSimilarityValidator',
+        'NAME': 'django.contrib.auth.password_validation.' +
+        'UserAttributeSimilarityValidator',
     },
     {
         'NAME': 'django.contrib.auth.password_validation.MinimumLengthValidator',
