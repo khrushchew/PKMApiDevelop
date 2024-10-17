@@ -3,14 +3,21 @@ from PKMApi.yandex_s3_storage import ClientImgStorage
 
 
 class User(models.Model):
-    login = models.CharField(unique=True, max_length=100, null=False, blank=False, verbose_name='Логин')
-    password = models.CharField(max_length=255, null=False, blank=False, verbose_name='Пароль')
-    name = models.CharField(max_length=255, null=False, blank=False, verbose_name='ФИО')
-    subdivision = models.ForeignKey('Subdivision', models.SET_NULL, blank=True, null=True, verbose_name='Подразделение')
-    role = models.ForeignKey('Role', models.SET_NULL, blank=True, null=True, verbose_name='Должность')
-    is_activated = models.BooleanField(default=False, blank=True, null=True, verbose_name='Подтверждённый')
+    name = models.CharField(max_length=255, null=False, blank=False, verbose_name='Имя')
+    surname = models.CharField(max_length=255, null=False, blank=False, verbose_name='Фамилия')
+    second_name = models.CharField(max_length=255, null=False, blank=False, verbose_name='Отчество')
     profile_picture = models.FileField(storage=ClientImgStorage(), blank=True, null=True, verbose_name='Фотография')
 
+    login = models.CharField(unique=True, max_length=100, null=False, blank=False, verbose_name='Логин')
+    password = models.CharField(max_length=255, null=False, blank=False, verbose_name='Пароль')
+
+    # structural_unit = ?
+    subdivision = models.ForeignKey('Subdivision', models.PROTECT, blank=True, null=True, verbose_name='Подразделение')
+    position = models.CharField(max_length=255, null=True, blank=True, verbose_name='Должность') #По диплому
+
+    role = models.ForeignKey('Role', models.SET_NULL, null=True, blank=True, verbose_name='Роль')
+
+    is_activated = models.BooleanField(default=False, blank=True, null=True, verbose_name='Подтверждённый')
 
     class Meta:
         db_table = 'User'

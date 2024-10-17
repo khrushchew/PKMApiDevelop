@@ -3,8 +3,7 @@ from django.db import models
 
 class Subdivision(models.Model):
     name = models.CharField(max_length=250, null=False, blank=False, verbose_name='Название подразделения')
-    area = models.ForeignKey('Area', models.CASCADE, null=False, blank=False, verbose_name='Название участка')
-
+    company = models.ForeignKey('Company', models.PROTECT, null=True, blank=True, verbose_name='Компания')
 
     class Meta:
         db_table='Subdivision'

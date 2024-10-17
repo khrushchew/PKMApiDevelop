@@ -1,6 +1,7 @@
 from rest_framework.response import Response
 from rest_framework.generics import CreateAPIView
 
+from .Rules import rule_window_kadrovik
 
 from .AuthSerializers import AuthSerializer
 from ..models.User import User
@@ -16,10 +17,14 @@ class AuthApiView(CreateAPIView):
         try:
             user = User.objects.get(login=login)
             if password == user.password:
-                if company_code == user.subdivision.area.department.field.company.code:
-                    if user.is_activated == True:
-                        serializer = self.get_serializer(user)
-                        return Response(serializer.data, status=200)
+                if company_code == user.subdivision.area.department.platform.company.code:
+                    if user.is_activated is True:
+                        serializer = AuthSerializer(user)
+                        response_data = serializer.data
+                        response_data['role'] = user.role.name
+                        if response_data['role'] == 'Кадровик':
+                            response_data.update({'windows': rule_window_kadrovik})
+                        return Response(response_data, status=200)
                     else:
                         return Response({'error': 'Аккаунт не активен'}, status=423)
                 else:
