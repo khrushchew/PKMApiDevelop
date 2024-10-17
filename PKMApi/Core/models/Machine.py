@@ -7,7 +7,7 @@ class Machine(models.Model):
     area = models.ForeignKey('Area', models.SET_NULL, blank=True, null=True)
     is_activated = models.BooleanField(default=False, blank=False, null=False)
     model = models.CharField(max_length=255, blank=True, null=True)
-    shift_schedule = models.ForeignKey('Shiftschedule', models.SET_NULL, blank=True, null=True)
+    # shift_schedule = models.ForeignKey('Shiftschedule', models.SET_NULL, blank=True, null=True)
     prefix = models.CharField(max_length=50, blank=True, null=True)
     first_machine_type = models.ForeignKey('Firstmachinetype', models.SET_NULL, blank=True, null=True)
     second_machine_type = models.ForeignKey('Secondmachinetype', models.SET_NULL, blank=True, null=True)

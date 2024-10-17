@@ -5,7 +5,7 @@ from .Platform import Platform
 from .Department import Department
 from .Area import Area
 from .Allocation import Allocation
-from .Shiftshedule import Shiftschedule
+
 from .Firstmachinetype import Firstmachinetype
 from .Secondmachinetype import Secondmachinetype
 from .Detailmachinetype import Detailmachinetype
@@ -16,7 +16,7 @@ from .Orderstatus import Orderstatus
 from .Order import Order
 from .Batch import Batch
 from .Workstatus import Workstatus
-from .Shift import Shift
+
 from .Machinework import Machinework
 from .Chiefbatch import Chiefbatch
 from .Stage import Stage
@@ -29,10 +29,14 @@ from .Stagearchive import Stagearchive
 from .Operationarchive import Operationarchive
 from .Operationoperator import Operationoperator
 from .Reporttype import Reporttype
-from .Shiftdistribution import Shiftdistribution
+
 from .Tranfer import Transfer
 from .Transferarchive import Transferarchive
 from .Transferoperation import Transferoperation
 from .Uploadedreport import Uploadedreport
-from .Workershift import Workershift
+
 from .Subdivision import Subdivision
+
+from .RoleOperator import RoleOperator
+
+from .WorkingDayMode import WorkingDayMode

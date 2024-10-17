@@ -11,9 +11,8 @@ class User(models.Model):
     login = models.CharField(unique=True, max_length=100, null=False, blank=False, verbose_name='Логин')
     password = models.CharField(max_length=255, null=False, blank=False, verbose_name='Пароль')
 
-    # structural_unit = ?
     subdivision = models.ForeignKey('Subdivision', models.PROTECT, blank=True, null=True, verbose_name='Подразделение')
-    position = models.CharField(max_length=255, null=True, blank=True, verbose_name='Должность') #По диплому
+    position = models.CharField(max_length=255, null=True, blank=True, verbose_name='Должность')
 
     role = models.ForeignKey('Role', models.SET_NULL, null=True, blank=True, verbose_name='Роль')
 

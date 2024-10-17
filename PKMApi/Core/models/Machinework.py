@@ -8,7 +8,7 @@ class Machinework(models.Model):
     machine = models.ForeignKey('Machine', models.SET_NULL, blank=True, null=True)
     batch = models.ForeignKey('Batch', models.SET_NULL, blank=True, null=True)
     comment = models.TextField(blank=True, null=True)
-    shift = models.ForeignKey('Shift', models.SET_NULL, blank=True, null=True)
+    # shift = models.ForeignKey('Shift', models.SET_NULL, blank=True, null=True)
     date = models.DateField(null=False, blank=False)
     indent = models.IntegerField(default=0, blank=False, null=False)
     time_working = models.DurationField(blank=True, null=True)
