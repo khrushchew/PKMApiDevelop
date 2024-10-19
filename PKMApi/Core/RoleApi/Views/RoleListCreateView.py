@@ -16,8 +16,8 @@ class RoleListCreateApiView(APIView):
 
         company = Company.objects.get(code=company_code)
 
-        if Role.objects.filter(name=name, company=company).exists():
-            return Response({'error': 'Роль с таким именем уже существует в этой компании'}, status=409)
+        if Role.objects.filter(name=name, company__code=company_code).exists():
+            return Response({'error': 'Роль с таким названием уже'}, status=409)
 
         try:
             Role.objects.create(name=name, company=company)

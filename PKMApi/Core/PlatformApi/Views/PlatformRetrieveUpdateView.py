@@ -13,12 +13,16 @@ class PlatformRetrieveUpdateApiView(APIView):
         indent = request.data.get('indent')
         name = request.data.get('name')
         address = request.data.get('address')
-        
+        company_code = request.data.get('company_code')
+
         try:
             platform = Platform.objects.get(pk=pk)
         except:
-            return Response({'error': 'Такой роли не найдено'}, status=404)
+            return Response({'error': 'Такой платформы не найдено'}, status=404)
         
+        if Platform.objects.filter(name=name, company__code=company_code).exists():
+            return Response({'error': 'Платформа с таким названием уже существует'}, status=409)
+
         try:
             if indent:
                 platform.indent = indent
@@ -36,7 +40,7 @@ class PlatformRetrieveUpdateApiView(APIView):
         try:
             platform = Platform.objects.get(pk=pk)
         except:
-            return Response({'error': 'Такой роли не найдено'}, status=404)
+            return Response({'error': 'Такой платформы не найдено'}, status=404)
         
         try:
             platform.delete()
@@ -49,7 +53,7 @@ class PlatformRetrieveUpdateApiView(APIView):
         try:
             platform = Platform.objects.get(pk=pk)
         except:
-            return Response({'error': 'Такой роли не найдено'}, status=404)
+            return Response({'error': 'Такой платформы не найдено'}, status=404)
         
         try:
             serializer =PlatformApiSerializer(platform)

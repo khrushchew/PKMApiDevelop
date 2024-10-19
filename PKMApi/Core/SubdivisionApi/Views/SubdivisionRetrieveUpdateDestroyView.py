@@ -11,13 +11,15 @@ class SubdivisionRetrieveUpdateDestroyApiView(APIView):
     def put(self, request, pk):
 
         name = request.data.get('name')
+        company_code = request.data.get('company_code')
 
         try:
             subdivision = Subdivision.objects.get(pk=pk)
         except:
             return Response({'error': 'Подразделение не найдено'}, status=404)
         
-        # Проверка на дублирование
+        if Subdivision.objects.filter(name=name, company__code=company_code).exists():
+            return Response({'error': 'Подразделение с таким названием уже существует'}, status=409)
 
         try:
             subdivision.name = name

@@ -14,8 +14,8 @@ class SubdivisionListCreateApiView(APIView):
 
         company = Company.objects.get(code=company_code)
 
-        if Subdivision.objects.filter(name=name, company=company).exists():
-            return Response({'error': 'Подразделение с таким именем уже существует в этой компании'}, status=409)
+        if Subdivision.objects.filter(name=name, company__code=company_code).exists():
+            return Response({'error': 'Подразделение с таким названием уже существует'}, status=409)
 
         try:
             subdivision = Subdivision.objects.create(name=name, company=company)

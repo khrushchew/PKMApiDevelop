@@ -11,13 +11,15 @@ class RoleRetrieveUpdateApiView(APIView):
     def put(self, request, pk):
 
         name = request.data.get('name')
+        company_code = request.data.get('company_code')
 
         try:
             role = Role.objects.get(pk=pk)
         except:
             return Response({'error': 'Такой роли не найдено'}, status=404)
 
-        # proverka
+        if Role.objects.filter(name=name, company__code=company_code).exists():
+            return Response({'error': 'Роль с таким названием уже существует'}, status=409)
 
         try:
             role.name = name

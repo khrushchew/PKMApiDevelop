@@ -40,3 +40,9 @@ from .Subdivision import Subdivision
 from .RoleOperator import RoleOperator
 
 from .WorkingDayMode import WorkingDayMode
+
+from .MachineStyle import MachineStyle
+from .MachineGroup import MachineGroup
+from .MachineType import MachineType
+from .MachineName import MachineName
+from .MachineControlMethod import MachineControlMethod

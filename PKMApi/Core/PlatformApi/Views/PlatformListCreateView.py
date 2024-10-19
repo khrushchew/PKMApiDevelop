@@ -17,8 +17,8 @@ class PlatformListCreateApiView(APIView):
 
         company = Company.objects.get(code=company_code)
 
-        if Platform.objects.filter(name=name, company=company).exists():
-            return Response({'error': 'Платформа с таким именем уже существует в этой компании'}, status=409)
+        if Platform.objects.filter(name=name, company__code=company_code).exists():
+            return Response({'error': 'Платформа с таким названием уже существует'}, status=409)
 
         try:
             Platform.objects.create(indent=indent, name=name, address=address, company=company)
