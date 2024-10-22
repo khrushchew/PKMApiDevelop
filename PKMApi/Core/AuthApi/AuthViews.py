@@ -1,5 +1,5 @@
 from rest_framework.response import Response
-from rest_framework.generics import CreateAPIView
+from rest_framework.views import APIView
 
 from .Rules import rule_window_kadrovik
 
@@ -7,11 +7,8 @@ from .AuthSerializers import AuthSerializer
 from ..models.User import User
 
 
-class AuthApiView(CreateAPIView):
-    serializer_class = AuthSerializer
-
-    def post(self, request):
-        company_code = request.data.get('company_code')
+class AuthApiView(APIView):
+    def post(self, request, company_code):
         login = request.data.get('login')
         password = request.data.get('password')
         try:

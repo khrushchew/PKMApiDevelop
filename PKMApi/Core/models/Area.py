@@ -2,8 +2,8 @@ from django.db import models
 
 
 class Area(models.Model):
-    name = models.CharField(max_length=255, null=False, blank = False, verbose_name='Название участка')
     indent = models.IntegerField(default=0, blank=False, null=False, verbose_name='Идентификатор')
+    name = models.CharField(max_length=255, null=False, blank = False, verbose_name='Название участка')
     department = models.ForeignKey('Department', models.CASCADE, blank=False, null=False, verbose_name='Название цеха')
 
     class Meta:

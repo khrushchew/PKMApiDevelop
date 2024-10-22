@@ -1,7 +1,7 @@
 from django.db import models
 
 
-class WorkingDayMode(models.Model):
+class ShiftWorkingDayMode(models.Model):
     code = models.CharField(max_length=100, null=False, blank=False, verbose_name='Код рабочего дня')
     name = models.CharField(max_length=255, null=False, blank=False, verbose_name='Названние режима рабочего дня')
     company = models.ForeignKey('Company', models.CASCADE, null=False, blank=False, verbose_name='Компания')
@@ -40,6 +40,6 @@ class WorkingDayMode(models.Model):
     end_pause_10 = models.TimeField(null=True, blank=True, verbose_name='Начало перерыва 10')
 
     class Meta:
-        db_table = 'WorkingDayMode'
+        db_table = 'ShiftWorkingDayMode'
         verbose_name = 'Режим рабочего дня'
         verbose_name_plural = 'Режимы рабочего дня'

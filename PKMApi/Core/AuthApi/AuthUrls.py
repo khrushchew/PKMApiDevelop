@@ -3,5 +3,5 @@ from .AuthViews import AuthApiView
 
 
 urlpatterns=[
-    path('user/', AuthApiView.as_view()),
+    path('user/<str:company_code>/', AuthApiView.as_view()),
 ]

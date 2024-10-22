@@ -1,17 +1,18 @@
 from django.db import models
-
+from PKMApi.yandex_s3_storage import ClientImgStorage
 
 class Machine(models.Model):
-    invent_number = models.CharField(null=False, blank=False, unique=True, max_length=100)
-    name = models.CharField(null=False, blank=False, max_length=255)
-    area = models.ForeignKey('Area', models.SET_NULL, blank=True, null=True)
-    is_activated = models.BooleanField(default=False, blank=False, null=False)
-    model = models.CharField(max_length=255, blank=True, null=True)
-    # shift_schedule = models.ForeignKey('Shiftschedule', models.SET_NULL, blank=True, null=True)
-    prefix = models.CharField(max_length=50, blank=True, null=True)
-    first_machine_type = models.ForeignKey('Firstmachinetype', models.SET_NULL, blank=True, null=True)
-    second_machine_type = models.ForeignKey('Secondmachinetype', models.SET_NULL, blank=True, null=True)
-    detail_machine_type = models.ForeignKey('Detailmachinetype', models.SET_NULL, blank=True, null=True)
+    invent_number = models.ForeignKey('MachineName', models.CASCADE, blank=False, null=False, verbose_name='Инвентарный номер')
+
+    ratio = models.PositiveIntegerField(default = 0, blank=False, null=False, verbose_name='Коэффициент многостачности')
+    tariff = models.PositiveIntegerField(default = 0, blank=False, null=False, verbose_name='Сдельный тариф')
  
+    area = models.ForeignKey('Area', models.CASCADE, null=False, blank=False, verbose_name='Участок')
+
+    img = models.FileField(storage=ClientImgStorage(), blank=True, null=True, verbose_name='Фотография')
+    
     class Meta:
         db_table = 'Machine'
+
+    def __str__(self):
+        return f'{self.invent_number}'

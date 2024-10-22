@@ -6,10 +6,10 @@ from .Department import Department
 from .Area import Area
 from .Allocation import Allocation
 
-from .Firstmachinetype import Firstmachinetype
-from .Secondmachinetype import Secondmachinetype
-from .Detailmachinetype import Detailmachinetype
-from .Machine import Machine
+
+
+
+
 from .Batcharchive import Batcharchive
 from .Batchstatus import Batchstatus
 from .Orderstatus import Orderstatus
@@ -39,10 +39,16 @@ from .Subdivision import Subdivision
 
 from .RoleOperator import RoleOperator
 
-from .WorkingDayMode import WorkingDayMode
+from .ShiftWorkingDayMode import ShiftWorkingDayMode
+from .ShiftMode import  ShiftMode
 
 from .MachineStyle import MachineStyle
 from .MachineGroup import MachineGroup
 from .MachineType import MachineType
 from .MachineName import MachineName
 from .MachineControlMethod import MachineControlMethod
+from .Machine import Machine
+
+from .Brigade import Brigade
+from .BrigadeMachineUser import BrigadeMachineUser
+
