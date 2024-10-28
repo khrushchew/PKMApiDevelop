@@ -39,8 +39,7 @@ from .Subdivision import Subdivision
 
 from .RoleOperator import RoleOperator
 
-from .ShiftWorkingDayMode import ShiftWorkingDayMode
-from .ShiftMode import  ShiftMode
+
 
 from .MachineStyle import MachineStyle
 from .MachineGroup import MachineGroup
@@ -52,3 +51,7 @@ from .Machine import Machine
 from .Brigade import Brigade
 from .BrigadeMachineUser import BrigadeMachineUser
 
+from .ShiftWeekDay import ShiftWeekDay
+from .ShiftCalendar import ShiftCalendar
+from .ShiftWorkingDayMode import ShiftWorkingDayMode
+from .ShiftMode import ShiftMode

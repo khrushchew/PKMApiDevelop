@@ -2,6 +2,7 @@ from django.db import models
 
 
 class ShiftMode(models.Model):
+    company = models.ForeignKey('Company', models.CASCADE, null=False, blank=False, verbose_name='Компания')
     code = models.CharField(max_length=100, null=False, blank=False, verbose_name='Код режима сменности')
     work_hours_per_day = models.PositiveIntegerField(null=False, blank=False, verbose_name='Рабочих часов в день')
     shifts_per_day = models.PositiveIntegerField(null=False, blank=False, verbose_name='Смен в сутках')
@@ -11,8 +12,9 @@ class ShiftMode(models.Model):
     shift_working_day_mode = models.ForeignKey('ShiftWorkingDayMode', models.SET_NULL, null=True, blank=True, verbose_name='Режимы рабочего дня')
     work_days_per_week = models.PositiveIntegerField(null=False, blank=False, verbose_name='Рабочих дней в неделе')
     name = models.CharField(max_length=255, null=False, blank=False, verbose_name='Наименование')
-
-    class meta:
+    shif_calendar = models.ForeignKey('ShiftCalendar', models.SET_NULL, blank=True, null=True, verbose_name='Расписание')
+    
+    class Meta:
         db_table = 'ShiftMode'
         verbose_name = 'Режим сменности'
         verbose_name_plural = 'Режимы сменности'

@@ -5,7 +5,7 @@ class ShiftWorkingDayMode(models.Model):
     code = models.CharField(max_length=100, null=False, blank=False, verbose_name='Код рабочего дня')
     name = models.CharField(max_length=255, null=False, blank=False, verbose_name='Названние режима рабочего дня')
     company = models.ForeignKey('Company', models.CASCADE, null=False, blank=False, verbose_name='Компания')
-
+    
     start_time = models.TimeField(null=False, blank=False, verbose_name='Время начала смены')
     end_time = models.TimeField(null=False, blank=False, verbose_name='Время конца смены')
 
