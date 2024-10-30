@@ -9,10 +9,15 @@ from .models.MachineStyle import MachineStyle
 from .models.MachineGroup import MachineGroup
 from .models.MachineType import MachineType
 from .models.MachineName import MachineName
-from .models import ShiftDay
-from .models import ShiftWorkingDayMode
-from .models import ShiftMode
-from .models import ShiftCalendar
+from .models.ShiftDay import ShiftDay
+from .models.ShiftWorkingDayMode import ShiftWorkingDayMode
+from .models.ShiftMode import ShiftMode
+from .models.ShiftCalendar import ShiftCalendar
+from .models.Area import Area
+from .models.Platform import Platform
+from .models.Department import Department
+
+
 
 admin.site.register(About)
 admin.site.register(Company)
@@ -27,3 +32,6 @@ admin.site.register(ShiftDay)
 admin.site.register(ShiftWorkingDayMode)
 admin.site.register(ShiftCalendar)
 admin.site.register(ShiftMode)
+admin.site.register(Platform)
+admin.site.register(Department)
+admin.site.register(Area)

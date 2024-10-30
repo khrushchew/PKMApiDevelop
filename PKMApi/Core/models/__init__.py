@@ -17,7 +17,6 @@ from .Order import Order
 from .Batch import Batch
 from .Workstatus import Workstatus
 
-from .Machinework import Machinework
 from .Chiefbatch import Chiefbatch
 from .Stage import Stage
 from .Operation import Operation
@@ -27,12 +26,12 @@ from .Stagedistribution import Stagedistribution
 from .Chiefoperation import Chiefoperation
 from .Stagearchive import Stagearchive
 from .Operationarchive import Operationarchive
-from .Operationoperator import Operationoperator
+
 from .Reporttype import Reporttype
 
 from .Tranfer import Transfer
 from .Transferarchive import Transferarchive
-from .Transferoperation import Transferoperation
+
 from .Uploadedreport import Uploadedreport
 
 from .Subdivision import Subdivision
@@ -44,12 +43,11 @@ from .RoleOperator import RoleOperator
 from .MachineStyle import MachineStyle
 from .MachineGroup import MachineGroup
 from .MachineType import MachineType
-from .MachineName import MachineName
 from .MachineControlMethod import MachineControlMethod
-from .Machine import Machine
+from .MachineName import MachineName
 
 from .Brigade import Brigade
-from .BrigadeMachineUser import BrigadeMachineUser
+
 
 from .ShiftDay import ShiftDay
 from .ShiftWorkingDayMode import ShiftWorkingDayMode

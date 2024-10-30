@@ -50,23 +50,6 @@ class ShiftCalendarApiViewSet(ModelViewSet):
         else:
             raise NotFound({'error': 'Расписаний не найдено'})
 
-    def get_shift_working_day_mode(self):
-        company_code = self.kwargs.get('company_code')
-        shift_working_day_mode_code = self.request.data.get('shift_working_day_mode_code')
-        try:
-            return ShiftWorkingDayMode.objects.get(code=shift_working_day_mode_code, company__code=company_code)
-        except:
-            return self.handler500
-    
-    def get_shift_calendar_entity(self):
-        try:
-            return ShiftCalendar.objects.get(pk=self.kwargs.get('pk'))
-        except:
-            raise NotFound({'error': 'Такого расписания не найдено'})
-
-    def get_day(obj):
-        return 
-
     def list(self, request, *args, **kwargs):  
         shift_calendars = self.get_shift_calendar_list()
         try:
