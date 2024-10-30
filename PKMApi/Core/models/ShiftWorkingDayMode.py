@@ -45,4 +45,4 @@ class ShiftWorkingDayMode(models.Model):
         verbose_name_plural = 'Режимы рабочего дня'
 
     def __str__(self):
-        return f'{self.company} - {self.name}'
+        return f'{self.company} - {self.code}'

@@ -7,3 +7,4 @@ class ShiftCalendarApiSerializer(serializers.ModelSerializer):
     class Meta:
         model = ShiftCalendar
         fields = ('pk', 'day', 'shift_working_day_mode', 'shift_mode')
+        

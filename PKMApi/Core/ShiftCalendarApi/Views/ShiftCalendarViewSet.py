@@ -10,6 +10,7 @@ from Core.models.ShiftCalendar import ShiftCalendar
 
 from Core.models.ShiftMode import ShiftMode
 from Core.models.ShiftWorkingDayMode import ShiftWorkingDayMode
+from Core.models.ShiftDay import ShiftDay
 
 from datetime import date
 
@@ -43,7 +44,7 @@ class ShiftCalendarApiViewSet(ModelViewSet):
                 raise NotFound({'error': 'Такого режима смености не найдено'})
             
     def get_shift_calendar_list(self):
-        shift_calendars = ShiftCalendar.objects.filter(shift_mode=self.get_shift_mode()).order_by('day')
+        shift_calendars = ShiftCalendar.objects.filter(shift_mode=self.get_shift_mode()).order_by('pk')
         if shift_calendars.exists():
             return shift_calendars
         else:
@@ -63,67 +64,23 @@ class ShiftCalendarApiViewSet(ModelViewSet):
         except:
             raise NotFound({'error': 'Такого расписания не найдено'})
 
-    def create(self, request, *args, **kwargs):
-        company = self.get_company()
+    def get_day(obj):
+        return 
 
-        data ={"day": date.fromisoformat(request.data.get('day')),
-                "shift_working_day_mode": str(self.get_shift_working_day_mode().pk),
-                "shift_mode": str(self.get_shift_mode().pk)
-                }
-
-        serializer = self.get_serializer(data=data)
-        print(data)
-        serializer.is_valid(raise_exception=True)
-
-        try:
-            serializer.save()
-            return self.handler200
-        except:
-            return self.handler500
-
-    def list(self, request, *args, **kwargs):
-        
-        def int_to_day(obj):
-            dict = {
-                '0': 'Понедельник',
-                '1': 'Вторник',
-                '2': 'Среда',
-                '3': 'Четверг',
-                '4': 'Пятница',
-                '5': 'Суббота',
-                '6': 'Воскресенье',
-            }
-            return dict[str(obj)]
-
+    def list(self, request, *args, **kwargs):  
         shift_calendars = self.get_shift_calendar_list()
         try:
             serializer = self.get_serializer(shift_calendars, many=True)
             data = serializer.data
             for i in data:
-                i['day_name'] = int_to_day(date.fromisoformat(i['day']).weekday())
-                mode = ShiftWorkingDayMode.objects.get(pk=i['shift_working_day_mode'])
-                i['shift_working_day_mode'] = f"{mode.start_time.strftime("%H:%M")} - {mode.end_time.strftime("%H:%M")}"
+                if i['shift_working_day_mode']:
+                    mode = ShiftWorkingDayMode.objects.get(pk=i['shift_working_day_mode'])
+                    i['shift_working_day_mode'] = f"{mode.start_time.strftime("%H:%M")} - {mode.end_time.strftime("%H:%M")}"
+                else:
+                    i['shift_working_day_mode'] = "-"
+                i['day'] = ShiftDay.objects.get(pk=i['day']).name
                 i.pop('shift_mode')
+
             return Response(data, status=200)
         except:
             return self.handler500
-        
-    def update(self, request, *args, **kwargs):
-        shift_calendar = self.get_shift_calendar_entity()
-        data ={"shift_working_day_mode": str(self.get_shift_working_day_mode().pk)}
-        try:
-            serializer = self.get_serializer(shift_calendar, data=data, partial=True)
-            serializer.is_valid(raise_exception=True)
-            serializer.save()
-            return self.handler200
-        except:
-            return self.handler500
-
-    def destroy(self, request, *args, **kwargs):
-        shift_calendar = self.get_shift_calendar_entity()
-        try:
-            shift_calendar.delete()
-            return self.handler200
-        except:
-            return self.handler500
-        
