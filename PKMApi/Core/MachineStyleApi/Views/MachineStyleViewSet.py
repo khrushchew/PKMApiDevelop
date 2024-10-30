@@ -61,13 +61,13 @@ class MachineStyleApiViewSet(ModelViewSet):
         try:
             serializer = self.get_serializer(machine_styles, many=True)
             data = serializer.data
-    
+
             for i in range(1, len(data)+1):
                 data[i-1].pop("company")
                 data[i-1]["indent"] = i
                 data[i-1]["count"] = MachineName.objects.filter(company__code=self.kwargs.get('company_code'), type__group__style__name=data[i-1]["name"]).count()
-    
-            res = [{"indent": "0", "name": "Резерв", "count": MachineName.objects.filter(company__code=self.kwargs.get('company_code'), type=None).count()}]
+
+            res = [{"indent": 0, "name": "Резерв", "count": MachineName.objects.filter(company__code=self.kwargs.get('company_code'), type=None).count()}]
             res.extend(data)
             return Response(res, status=200)
         except:
@@ -86,6 +86,8 @@ class MachineStyleApiViewSet(ModelViewSet):
     def update(self, request, *args, **kwargs):
 
         machine_style = self.get_machine_style_entity()
+
+        self.check_name()
 
         try:
             serializer = self.get_serializer(machine_style, data=request.data, partial=True)

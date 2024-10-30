@@ -19,7 +19,7 @@ class MachineName(models.Model):
     
     work_time = models.CharField(null=True, blank=False, verbose_name='Время работы')
     
-    brigade = models.ForeignKey('Brigade', models.PROTECT, null=True, blank=True, verbose_name='Бригада')
+    brigade = models.ForeignKey('Brigade', models.SET_NULL, null=True, blank=True, verbose_name='Бригада')
 
     class Meta:
         db_table = 'MachineName'

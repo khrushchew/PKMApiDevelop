@@ -11,6 +11,9 @@ from .ShiftWorkingDayModeApi.Views.ShiftWorkingDayModeViewSet import ShiftWorkin
 from .ShiftModeApi.Views.ShiftModeViewSet import ShiftModeApiViewSet
 from .ShiftCalendarApi.Views.ShiftCalendarViewSet import ShiftCalendarApiViewSet
 from .MachineStyleApi.Views.MachineStyleViewSet import MachineStyleApiViewSet
+from .MachineGroupApi.Views.MachineGroupViewSet import MachineGroupApiViewSet
+from .MachineTypeApi.Views.MachineTypeViewSet import MachineTypeApiViewSet
+from .MachineControlMethodApi.Views.MachineControlMethodView import MachineControlMethodApiViewSet
 
 # Subdivision
 subdivision_router = routers.SimpleRouter()
@@ -48,6 +51,18 @@ shift_calendar_router.register(r'shiftcalendars', ShiftCalendarApiViewSet, basen
 machine_style_router = routers.SimpleRouter()
 machine_style_router.register(r'machinestyles', MachineStyleApiViewSet, basename='machinestyle')
 
+# MachineGroup
+machine_group_router = routers.SimpleRouter()
+machine_group_router.register(r'machinegroups', MachineGroupApiViewSet, basename='machinegroup')
+
+# MachineType
+machine_type_router = routers.SimpleRouter()
+machine_type_router.register(r'machinetypes', MachineTypeApiViewSet, basename='machinetype')
+
+# MachineControlMethod
+machine_control_method_router = routers.SimpleRouter()
+machine_control_method_router.register(r'machinecontrolmethods', MachineControlMethodApiViewSet, basename='machinecontrolmethod')
+
 urlpatterns=[
     path('about/', AboutApiViewSet.as_view({'get': 'list'})),
 
@@ -79,4 +94,13 @@ urlpatterns=[
 
     # MachineStyle
     path('<str:company_code>/', include(machine_style_router.urls)),
+
+    # MachineGroup
+    path('<str:company_code>/', include(machine_group_router.urls)),
+
+    # MachineType
+    path('<str:company_code>/', include(machine_type_router.urls)),
+
+    # MachineControlMethod
+    path('<str:company_code>/', include(machine_control_method_router.urls)),
 ]

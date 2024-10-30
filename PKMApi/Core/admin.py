@@ -24,14 +24,17 @@ admin.site.register(Company)
 admin.site.register(User)
 admin.site.register(Role)
 admin.site.register(Subdivision)
+
 admin.site.register(MachineStyle)
 admin.site.register(MachineGroup)
 admin.site.register(MachineType)
 admin.site.register(MachineName)
+
 admin.site.register(ShiftDay)
 admin.site.register(ShiftWorkingDayMode)
 admin.site.register(ShiftCalendar)
 admin.site.register(ShiftMode)
+
 admin.site.register(Platform)
 admin.site.register(Department)
 admin.site.register(Area)

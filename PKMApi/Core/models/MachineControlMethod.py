@@ -2,6 +2,8 @@ from django.db import models
 
 
 class MachineControlMethod(models.Model):
+    
+    company = models.ForeignKey('Company', models.CASCADE, null=False, blank=False, verbose_name='Компания')
     name = models.CharField(max_length=100, null=False, blank=False, verbose_name='Название')
 
     class Meta:
