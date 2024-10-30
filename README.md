@@ -35,6 +35,7 @@ source venv/bin/activate
 pip install django
 pip install djangorestframework
 pip install psycopg2
+pip install django-storages
 ```
 
 ## 🏃 Запуск сервера
