@@ -32,10 +32,7 @@ source venv/bin/activate
 ## 📦 Установка зависимостей
 После активации виртуального окружения установите необходимые пакеты:
 ```bash
-pip install django
-pip install djangorestframework
-pip install psycopg2
-pip install django-storages
+pip freeze > requirements.txt
 ```
 
 ## 🏃 Запуск сервера
