@@ -10,36 +10,39 @@ class ShiftWorkingDayMode(models.Model):
     end_time = models.TimeField(null=False, blank=False, verbose_name='Время конца смены')
 
     start_pause_1 = models.TimeField(null=True, blank=True, verbose_name='Начало перерыва 1')
-    end_pause_1 = models.TimeField(null=True, blank=True, verbose_name='Начало перерыва 1')
+    end_pause_1 = models.TimeField(null=True, blank=True, verbose_name='Конец перерыва 1')
 
     start_pause_2 = models.TimeField(null=True, blank=True, verbose_name='Начало перерыва 2')
-    end_pause_2 = models.TimeField(null=True, blank=True, verbose_name='Начало перерыва 2')
+    end_pause_2 = models.TimeField(null=True, blank=True, verbose_name='Конец перерыва 2')
 
     start_pause_3 = models.TimeField(null=True, blank=True, verbose_name='Начало перерыва 3')
-    end_pause_3 = models.TimeField(null=True, blank=True, verbose_name='Начало перерыва 3')
+    end_pause_3 = models.TimeField(null=True, blank=True, verbose_name='Конец перерыва 3')
 
     start_pause_4 = models.TimeField(null=True, blank=True, verbose_name='Начало перерыва 4')
-    end_pause_4 = models.TimeField(null=True, blank=True, verbose_name='Начало перерыва 4')
+    end_pause_4 = models.TimeField(null=True, blank=True, verbose_name='Конец перерыва 4')
 
     start_pause_5 = models.TimeField(null=True, blank=True, verbose_name='Начало перерыва 5')
-    end_pause_5 = models.TimeField(null=True, blank=True, verbose_name='Начало перерыва 5')
+    end_pause_5 = models.TimeField(null=True, blank=True, verbose_name='Конец перерыва 5')
 
     start_pause_6 = models.TimeField(null=True, blank=True, verbose_name='Начало перерыва 6')
-    end_pause_6 = models.TimeField(null=True, blank=True, verbose_name='Начало перерыва 6')
+    end_pause_6 = models.TimeField(null=True, blank=True, verbose_name='Конец перерыва 6')
 
     start_pause_7 = models.TimeField(null=True, blank=True, verbose_name='Начало перерыва 7')
-    end_pause_7 = models.TimeField(null=True, blank=True, verbose_name='Начало перерыва 7')
+    end_pause_7 = models.TimeField(null=True, blank=True, verbose_name='Конец перерыва 7')
 
     start_pause_8 = models.TimeField(null=True, blank=True, verbose_name='Начало перерыва 8')
-    end_pause_8 = models.TimeField(null=True, blank=True, verbose_name='Начало перерыва 8')
+    end_pause_8 = models.TimeField(null=True, blank=True, verbose_name='Конец перерыва 8')
 
     start_pause_9 = models.TimeField(null=True, blank=True, verbose_name='Начало перерыва 9')
-    end_pause_9 = models.TimeField(null=True, blank=True, verbose_name='Начало перерыва 9')
+    end_pause_9 = models.TimeField(null=True, blank=True, verbose_name='Конец перерыва 9')
 
     start_pause_10 = models.TimeField(null=True, blank=True, verbose_name='Начало перерыва 10')
-    end_pause_10 = models.TimeField(null=True, blank=True, verbose_name='Начало перерыва 10')
+    end_pause_10 = models.TimeField(null=True, blank=True, verbose_name='Конец перерыва 10')
 
     class Meta:
         db_table = 'ShiftWorkingDayMode'
         verbose_name = 'Режим рабочего дня'
         verbose_name_plural = 'Режимы рабочего дня'
+
+    def __str__(self):
+        return f'{self.company} - {self.name}'

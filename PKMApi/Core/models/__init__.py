@@ -51,7 +51,11 @@ from .Machine import Machine
 from .Brigade import Brigade
 from .BrigadeMachineUser import BrigadeMachineUser
 
-from .ShiftWeekDay import ShiftWeekDay
-from .ShiftCalendar import ShiftCalendar
+from .ShiftDay import ShiftDay
 from .ShiftWorkingDayMode import ShiftWorkingDayMode
 from .ShiftMode import ShiftMode
+from .ShiftCalendar import ShiftCalendar
+
+
+
+from .About import About

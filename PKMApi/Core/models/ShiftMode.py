@@ -9,10 +9,9 @@ class ShiftMode(models.Model):
     hours_in_shifts = models.PositiveIntegerField(null=False, blank=False, verbose_name='Часов в смене')
     work_days_inline = models.PositiveIntegerField(null=False, blank=False, verbose_name='Рабочих дней в подряд')
     weekends_inline = models.PositiveIntegerField(null=False, blank=False, verbose_name='Выходных дней в подряд')
-    shift_working_day_mode = models.ForeignKey('ShiftWorkingDayMode', models.SET_NULL, null=True, blank=True, verbose_name='Режимы рабочего дня')
+    shift_working_day_mode = models.CharField(null=False, blank=False, verbose_name='Режимы рабочего дня')
     work_days_per_week = models.PositiveIntegerField(null=False, blank=False, verbose_name='Рабочих дней в неделе')
     name = models.CharField(max_length=255, null=False, blank=False, verbose_name='Наименование')
-    shif_calendar = models.ForeignKey('ShiftCalendar', models.SET_NULL, blank=True, null=True, verbose_name='Расписание')
     
     class Meta:
         db_table = 'ShiftMode'
@@ -20,5 +19,5 @@ class ShiftMode(models.Model):
         verbose_name_plural = 'Режимы сменности'
 
     def __str__(self):
-        return f'{self.code}'
+        return f'{self.company} - {self.code}'
     
