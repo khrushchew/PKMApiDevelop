@@ -12,12 +12,12 @@ class MachineName(models.Model):
     type = models.ForeignKey('MachineType', models.SET_NULL, null=True, blank=True, verbose_name='Тип оборудования')
     machine_control_method = models.ForeignKey('MachineControlMethod', models.SET_NULL , null=True, blank=True, verbose_name='Способ управления оборудованием')
     
-    ratio = models.PositiveIntegerField(default=0, null=False, blank=False, verbose_name='Коэффициент многостаночности')
-    tarife = models.PositiveIntegerField(default=0, null=False, blank=False, verbose_name='Сдельный тариф')
+    ratio = models.PositiveIntegerField(default=0, null=True, blank=True, verbose_name='Коэффициент многостаночности')
+    tarife = models.PositiveIntegerField(default=0, null=True, blank=True, verbose_name='Сдельный тариф')
 
     area = models.ForeignKey('Area', models.PROTECT, null=False, blank=False, verbose_name='Участок')
     
-    work_time = models.CharField(null=True, blank=False, verbose_name='Время работы')
+    work_time = models.CharField(null=True, blank=True, verbose_name='Время работы')
     
     brigade = models.ForeignKey('Brigade', models.SET_NULL, null=True, blank=True, verbose_name='Бригада')
 
