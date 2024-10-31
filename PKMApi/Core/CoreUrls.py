@@ -1,4 +1,4 @@
-from django.urls import include, path
+from django.urls import include, path, re_path
 from rest_framework import routers
 
 from .SubdivisionApi.Views.SubdivisionViewSet import SubdivisionApiViewSet
@@ -62,7 +62,6 @@ machine_type_router.register(r'machinetypes', MachineTypeApiViewSet, basename='m
 # MachineControlMethod
 machine_control_method_router = routers.SimpleRouter()
 machine_control_method_router.register(r'machinecontrolmethods', MachineControlMethodApiViewSet, basename='machinecontrolmethod')
-
 
 urlpatterns=[
     path('about/', AboutApiViewSet.as_view({'get': 'list'})),
