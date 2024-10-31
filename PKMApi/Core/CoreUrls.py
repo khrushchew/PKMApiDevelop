@@ -1,8 +1,6 @@
 from django.urls import include, path
 from rest_framework import routers
 
-from django.conf.urls import url
-
 from .SubdivisionApi.Views.SubdivisionViewSet import SubdivisionApiViewSet
 from .RoleApi.Views.RoleViewSet import RoleApiViewSet
 from .PlatformApi.Views.PlatformViewSet import PlatformApiViewSet
