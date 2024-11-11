@@ -1,5 +1,5 @@
 from rest_framework.response import Response
-from rest_framework.viewsets import ModelViewSet
+from rest_framework.viewsets import ViewSet
 from rest_framework.exceptions import NotFound, ValidationError
 
 from ..Serializers.MachineControlMethodSerializer import MachineControlMethodApiSerializer
@@ -8,9 +8,7 @@ from Core.models.MachineControlMethod import MachineControlMethod
 from Core.models.Company import Company
 from Core.models.MachineName import MachineName
 
-class MachineControlMethodApiViewSet(ModelViewSet):
-
-    serializer_class = MachineControlMethodApiSerializer
+class MachineControlMethodApiViewSet(ViewSet):
 
     handler200 = Response(status=200)
     handler500 = Response({'error': 'Что-то пошло не так, повторите попытку позже'}, status=500)
@@ -47,7 +45,7 @@ class MachineControlMethodApiViewSet(ModelViewSet):
         data["company"] = self.get_company().pk
 
         try:
-            serializer = self.get_serializer(data=data)
+            serializer = MachineControlMethodApiSerializer(data=data)
             serializer.is_valid(raise_exception=True)
             serializer.save()
             return self.handler200
@@ -59,7 +57,7 @@ class MachineControlMethodApiViewSet(ModelViewSet):
         machine_control_methods = self.get_machine_control_method_list()
         
         try:
-            serializer = self.get_serializer(machine_control_methods, many=True)
+            serializer = MachineControlMethodApiSerializer(machine_control_methods, many=True)
             data = serializer.data
 
             for i in range(1, len(data)+1):
@@ -76,7 +74,7 @@ class MachineControlMethodApiViewSet(ModelViewSet):
         machine_control_method = self.get_machine_control_method_entity()
 
         try:
-            serializer = self.get_serializer(machine_control_method)
+            serializer = MachineControlMethodApiSerializer(machine_control_method)
             return Response(serializer.data, status=200)
         except:
             return self.handler500
@@ -90,7 +88,7 @@ class MachineControlMethodApiViewSet(ModelViewSet):
         try:
             data = request.data
             data["company"] = self.get_company().pk
-            serializer = self.get_serializer(machine_control_method, data=data, partial=True)
+            serializer = MachineControlMethodApiSerializer(machine_control_method, data=data, partial=True)
             serializer.is_valid(raise_exception=True)
             serializer.save()
             return self.handler200

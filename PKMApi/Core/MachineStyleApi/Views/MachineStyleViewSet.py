@@ -1,5 +1,5 @@
 from rest_framework.response import Response
-from rest_framework.viewsets import ModelViewSet
+from rest_framework.viewsets import ViewSet
 from rest_framework.exceptions import NotFound, ValidationError
 
 from ..Serializers.MachineStyleSerializer import MachineStyleApiSerializer
@@ -8,11 +8,11 @@ from Core.models.Company import Company
 from Core.models.MachineStyle import MachineStyle
 from Core.models.MachineName import MachineName
 
-class MachineStyleApiViewSet(ModelViewSet):
-
-    serializer_class = MachineStyleApiSerializer
+class MachineStyleApiViewSet(ViewSet):
 
     handler200 = Response(status=200)
+    handler201 = Response(status=201)
+    handler204 = Response(status=204)
     handler500 = Response({'error': 'Что-то пошло не так, повторите попытку позже'}, status=500)
 
     def get_company(self):
@@ -47,10 +47,12 @@ class MachineStyleApiViewSet(ModelViewSet):
         data['company'] = str(self.get_company().pk) 
 
         try:
-            serializer = self.get_serializer(data=data)
-            serializer.is_valid(raise_exception=True)
-            serializer.save()
-            return self.handler200
+            serializer = MachineStyleApiSerializer(data=data)
+            if serializer.is_valid():
+                serializer.save()
+                return self.handler201
+            else:
+                return Response(serializer.errors, status=400)
         except:
             return self.handler500
 
@@ -59,7 +61,7 @@ class MachineStyleApiViewSet(ModelViewSet):
         machine_styles = self.get_machine_style_list()
         
         try:
-            serializer = self.get_serializer(machine_styles, many=True)
+            serializer = MachineStyleApiSerializer(machine_styles, many=True)
             data = serializer.data
 
             for i in range(1, len(data)+1):
@@ -72,13 +74,13 @@ class MachineStyleApiViewSet(ModelViewSet):
             return Response(res, status=200)
         except:
             return self.handler500
-
+    
     def retrieve(self, request, *args, **kwargs):
         
         machine_style = self.get_machine_style_entity()
 
         try:
-            serializer = self.get_serializer(machine_style)
+            serializer = MachineStyleApiSerializer(machine_style)
             return Response(serializer.data, status=200)
         except:
             return self.handler500
@@ -90,7 +92,7 @@ class MachineStyleApiViewSet(ModelViewSet):
         self.check_name()
 
         try:
-            serializer = self.get_serializer(machine_style, data=request.data, partial=True)
+            serializer = MachineStyleApiSerializer(machine_style, data=request.data, partial=True)
             serializer.is_valid(raise_exception=True)
             serializer.save()
             return self.handler200
@@ -103,7 +105,7 @@ class MachineStyleApiViewSet(ModelViewSet):
 
         try:
             machine_style.delete()
-            return self.handler200
+            return self.handler204
         except:
             return self.handler500
         

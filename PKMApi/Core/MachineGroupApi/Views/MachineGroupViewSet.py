@@ -1,5 +1,5 @@
 from rest_framework.response import Response
-from rest_framework.viewsets import ModelViewSet
+from rest_framework.viewsets import ViewSet
 from rest_framework.exceptions import NotFound, ValidationError
 
 from ..Serializers.MachineGroupSerializer import MachineGroupApiSerializer
@@ -9,26 +9,29 @@ from Core.models.MachineStyle import MachineStyle
 from Core.models.MachineGroup import MachineGroup
 from Core.models.MachineName import MachineName
 
-class MachineGroupApiViewSet(ModelViewSet):
-
-    serializer_class = MachineGroupApiSerializer
+class MachineGroupApiViewSet(ViewSet):
 
     handler200 = Response(status=200)
+    handler201 = Response(status=201)
+    handler204 = Response(status=204)
     handler500 = Response({'error': 'Что-то пошло не так, повторите попытку позже'}, status=500)
 
-    def get_machine_style(self):
-        machine_style = self.request.data.get('style')
-        try:
-            return MachineStyle.objects.get(name=machine_style)
-        except:
-            raise NotFound({'error': 'Такого вида оборудования не найдено'})
-        
     def check_name(self):
-        if MachineGroup.objects.filter(style__company__code=self.kwargs.get('company_code'), name=self.request.data.get('name')).exists():
+        if MachineGroup.objects.filter(style__company__code=self.kwargs.get('company_code'), style=self.request.data.get('style'), name=self.request.data.get('name')).exists():
             raise ValidationError({'error': 'Группа оборудования с таким названием уже существует'})
 
     def get_machine_group_list(self):
-        machine_groups = MachineGroup.objects.filter(style__company__code=self.kwargs.get('company_code'))
+
+        filters = {"style__company__code": self.kwargs.get('company_code')}
+
+        opt_filters = ["style"]
+
+        for i in opt_filters:
+            param = self.request.query_params.get('style')
+            if param:
+                filters[i] = param
+
+        machine_groups = MachineGroup.objects.filter(**filters)
         if machine_groups.exists():
             return machine_groups
         else:
@@ -45,13 +48,11 @@ class MachineGroupApiViewSet(ModelViewSet):
         
         self.check_name()
 
-        data["style"] = self.get_machine_style().pk
-
         try:
-            serializer = self.get_serializer(data=data)
+            serializer = MachineGroupApiSerializer(data=data)
             serializer.is_valid(raise_exception=True)
             serializer.save()
-            return self.handler200
+            return self.handler201
         except:
             return self.handler500
 
@@ -60,7 +61,7 @@ class MachineGroupApiViewSet(ModelViewSet):
         machine_groups = self.get_machine_group_list()
         
         try:
-            serializer = self.get_serializer(machine_groups, many=True)
+            serializer = MachineGroupApiSerializer(machine_groups, many=True)
             data = serializer.data
 
             for i in range(1, len(data)+1):
@@ -77,7 +78,7 @@ class MachineGroupApiViewSet(ModelViewSet):
         machine_group = self.get_machine_group_entity()
 
         try:
-            serializer = self.get_serializer(machine_group)
+            serializer = MachineGroupApiSerializer(machine_group)
             return Response(serializer.data, status=200)
         except:
             return self.handler500
@@ -90,8 +91,7 @@ class MachineGroupApiViewSet(ModelViewSet):
         
         try:
             data = request.data
-            data["style"] = self.get_machine_style().pk
-            serializer = self.get_serializer(machine_group, data=data, partial=True)
+            serializer = MachineGroupApiSerializer(machine_group, data=data, partial=True)
             serializer.is_valid(raise_exception=True)
             serializer.save()
             return self.handler200
@@ -104,7 +104,7 @@ class MachineGroupApiViewSet(ModelViewSet):
 
         try:
             machine_group.delete()
-            return self.handler200
+            return self.handler204
         except:
             return self.handler500
         

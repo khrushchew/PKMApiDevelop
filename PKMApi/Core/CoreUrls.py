@@ -71,7 +71,9 @@ machine_name_router.register(r'machinenames', MachineNameApiViewSet, basename='m
 urlpatterns=[
     path('about/', AboutApiViewSet.as_view({'get': 'list'})),
 
-    path('auth/', include('Core.AuthApi.AuthUrls')),
+    path('login/', include('Core.LoginApi.LoginUrls')),
+
+    path('logout/', include('Core.LogoutApi.LogoutUrls')),
 
     # Subdivision
     path('<str:company_code>/', include(subdivision_router.urls)),
@@ -112,3 +114,4 @@ urlpatterns=[
     # MachineName
     path('<str:company_code>/', include(machine_name_router.urls)),
 ]
+

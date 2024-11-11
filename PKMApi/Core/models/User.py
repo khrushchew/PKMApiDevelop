@@ -21,6 +21,8 @@ class User(models.Model):
     
     is_activated = models.BooleanField(default=False, blank=True, null=True, verbose_name='Подтверждённый')
 
+    token = models.CharField(null=True, blank=True, verbose_name='Токен')
+
     class Meta:
         db_table = 'User'
         verbose_name = 'Пользователь'

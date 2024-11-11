@@ -6,6 +6,7 @@ from .Department import Department
 from .Area import Area
 from .Allocation import Allocation
 
+from .Device import Device
 
 
 
@@ -48,6 +49,9 @@ from .MachineName import MachineName
 
 from .Brigade import Brigade
 
+from .ShiftBrigadeCalendar import ShiftBrigadeCalendar
+
+from .Shift import Shift
 
 from .ShiftDay import ShiftDay
 from .ShiftWorkingDayMode import ShiftWorkingDayMode

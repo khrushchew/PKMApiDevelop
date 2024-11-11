@@ -9,13 +9,18 @@ class MachineName(models.Model):
     img = models.FileField(storage=ClientImgStorage(), blank=True, null=True, verbose_name='Фотография')
 
     company = models.ForeignKey('Company', models.CASCADE, null=False, blank=False, verbose_name='Компания')
+    
+    style = models.ForeignKey('MachineStyle', models.SET_NULL, null=True, blank=True, verbose_name='Вид оборудования')
+    group = models.ForeignKey('MachineGroup', models.SET_NULL, null=True, blank=True, verbose_name='Группа оборудования')
     type = models.ForeignKey('MachineType', models.SET_NULL, null=True, blank=True, verbose_name='Тип оборудования')
     machine_control_method = models.ForeignKey('MachineControlMethod', models.SET_NULL , null=True, blank=True, verbose_name='Способ управления оборудованием')
     
     ratio = models.PositiveIntegerField(default=0, null=True, blank=True, verbose_name='Коэффициент многостаночности')
     tarife = models.PositiveIntegerField(default=0, null=True, blank=True, verbose_name='Сдельный тариф')
 
-    area = models.ForeignKey('Area', models.PROTECT, null=False, blank=False, verbose_name='Участок')
+    platform = models.ForeignKey('Platform', models.SET_NULL, null=True, blank=True, verbose_name='Площадка')
+    department = models.ForeignKey('Department', models.SET_NULL, null=True, blank=True, verbose_name='Цех')
+    area = models.ForeignKey('Area', models.SET_NULL, null=True, blank=True, verbose_name='Участок')
     
     work_time = models.CharField(null=True, blank=True, verbose_name='Время работы')
     
