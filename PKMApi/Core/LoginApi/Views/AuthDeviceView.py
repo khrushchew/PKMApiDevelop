@@ -23,28 +23,12 @@ class AuthDeviceApiView(APIView):
 
     @swagger_auto_schema(
         operation_summary="Авторизация устройства",
-        operation_description="Авторизация текущего устройства по компании и идентификатору",
+        operation_description="Авторизирует текущее устройство по компании и идентификатору",
         tags=['login'],
         manual_parameters=[company_code_param],
         request_body=AuthDeviceApiSerializer,
         responses={
-            200: openapi.Response(
-                description="Успешный ответ",
-                examples={
-                    "application/json": {
-                        "О приложении": {
-                            "Текущая версия": "1.0",
-                            "Обновление от": "2024-01-01",
-                            "Разработчик": "ООО ПКМ"
-                        },
-                        "Контакты": {
-                            "Адрес": "ул. Пример, д. 1"
-                        },
-                        "Правовая информация": "Некоторая правовая информация",
-                        "Инструкции": "Некоторые инструкции"
-                    }
-                }
-            ),
+            200: openapi.Response(description="Успешный ответ",),
             400: openapi.Response(description="Устройство с таким идентификатором уже существует"),
             404: openapi.Response(description="Такого зарегистрированного устройства не найдено"),
             500: openapi.Response(description="Ошибка сервера"),
