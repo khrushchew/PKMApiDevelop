@@ -46,7 +46,7 @@ class UserAdmin(BaseUserAdmin):
         (None, {'fields': ('username', 'password')}),
         ('Персональная информация', {'fields': ('first_name', 'last_name', 'email', 'surname', 'profile_picture')}),
         ('Организация', {'fields': ('company', 'subdivision', 'position')}),
-        ('Права доступа', {'fields': ('is_active', 'is_staff', 'is_superuser', 'groups', 'user_permissions')}),
+        ('Права доступа', {'fields': ('is_active', 'is_staff', 'is_superuser', 'groups', 'user_permissions', 'session')}),
         ('Важные даты', {'fields': ('last_login', 'date_joined')}),
     )
     add_fieldsets = (

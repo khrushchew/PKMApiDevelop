@@ -12,8 +12,14 @@ from ..Serializers.PlatformUpdateSerializer import PlatformUpdateApiSerializer
 from Core.models.Company import Company
 from Core.models.Platform import Platform
 
+from rest_framework.decorators import permission_classes
+from Core.UserApi.Permissions.permissions import IsInGroups
+from rest_framework.permissions import IsAuthenticated
+
 
 class PlatformApiViewSet(ViewSet):
+
+    permission_classes = [IsAuthenticated]
 
     handler200 = Response(status=200)
     handler201 = Response(status=201)
@@ -77,9 +83,9 @@ class PlatformApiViewSet(ViewSet):
         self.check_name()
         self.check_indent()
 
+        serializer = PlatformCreateApiSerializer(data=data)
+        serializer.is_valid(raise_exception=True)
         try:
-            serializer = PlatformCreateApiSerializer(data=data)
-            serializer.is_valid(raise_exception=True)
             serializer.save()
             return self.handler201
         except:
@@ -96,8 +102,8 @@ class PlatformApiViewSet(ViewSet):
             500: "Ошибка сервера"
         }
     )
-    def list(self, request, *args, **kwargs):
 
+    def list(self, request, *args, **kwargs):
         platforms = self.get_platform_list()
 
         try:

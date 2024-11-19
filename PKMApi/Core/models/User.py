@@ -15,7 +15,7 @@ class User(AbstractUser):
     subdivision = models.ForeignKey('Subdivision', models.SET_NULL, blank=True, null=True, verbose_name='Подразделение')
     position = models.CharField(max_length=255, null=True, blank=True, verbose_name='Должность')
 
-    token = models.CharField(null=True, blank=True, verbose_name='Токен')
+    session = models.BooleanField(null=True, blank=True, verbose_name='Сессия')
 
     def __str__(self):
         return f"{self.username}"

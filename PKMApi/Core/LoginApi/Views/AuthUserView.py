@@ -1,69 +1,49 @@
-import uuid
-
 from rest_framework.views import APIView
 from rest_framework.response import Response
 from rest_framework.exceptions import NotFound, AuthenticationFailed
-
 from drf_yasg.utils import swagger_auto_schema
 from drf_yasg import openapi
-
-from ..Rules import login_window
+from rest_framework_simplejwt.tokens import RefreshToken
+from django.contrib.auth import authenticate
 
 from Core.models.User import User
-
 from ..Serializers.AuthUserSerializer import AuthUserApiSerializer
 
 
 class AuthUserApiView(APIView):
-
     handler200 = Response(status=200)
     handler500 = Response({'error': 'Что-то пошло не так, повторите попытку позже'}, status=500)
 
-    company_code_param = openapi.Parameter(
-        'company_code',  
-        openapi.IN_PATH,
-        description="Код компании",
-        type=openapi.TYPE_STRING,
-        required=True
-    )
-
-    @swagger_auto_schema(
-        operation_summary="Авторизация пользователя",
-        operation_description="Авторизирует пользователя по логину и паролю с учётом пройденного этапа авторизации по устройству",
-        tags=['login'],
-        manual_parameters=[company_code_param],
-        request_body=AuthUserApiSerializer,
-        responses={
-            200: openapi.Response(description="Успешный ответ", examples={"window": "Табель", "token": "5d5a3448-9918-4a4c-a254-a7d15b05207f", "groups": ["Директор", "Кадровик"]}),
-            400: openapi.Response(description="Устройство с таким идентификатором уже существует"),
-            404: openapi.Response(description="Такого зарегистрированного устройства не найдено"),
-            500: openapi.Response(description="Ошибка сервера"),
-        },
-    )
     def post(self, request, company_code):
-        
-        username = request.data.get('username')
-        password = request.data.get('password')
 
-        try:
-            user = User.objects.get(company__code=company_code, username=username)
-        except User.DoesNotExist:
-            raise NotFound({'error': 'Такой пользователь не найден, проверьте введённые данные'})
-        
-        if not user.check_password(password):
-            raise NotFound({'error': 'Неверный пароль, попробуйте снова'})
-        
-        if not user.is_active:
-            raise NotFound({'error': 'Пользователь не активирован, обратитесь к кадровику или администратору'})
+        data = request.data
 
-        if user.token:
-            raise AuthenticationFailed({'error': 'Вход невозможен: активный сеанс уже существует'})
+        username = data.get('username', None)
 
-        new_token = str(uuid.uuid4())
-        user.token = new_token
-        user.save()
+        password = data.get('password', None)
 
-        groups = [group.name for group in user.groups.all()]
+        if username is None or password is None:
 
-        login_window.update({'username': user.username, 'token': user.token, 'groups': groups,})
-        return Response(login_window, status=200)
+            return Response({'error': 'Нужен и логин, и пароль'}, status=400)
+
+        user = authenticate(username=username, password=password)
+
+        if user is None:
+
+            return Response({'error': 'Неверные данные'}, status=401)
+
+        refresh = RefreshToken.for_user(user)
+
+        refresh.payload.update({
+            'user_id': user.id,
+            'username': user.username
+        })
+
+
+        return Response({
+                'refresh': str(refresh),
+                'access': str(refresh.access_token),
+                'user': user.username,
+                'groups': [group.name for group in user.groups.all()],
+            }, status=200)
+

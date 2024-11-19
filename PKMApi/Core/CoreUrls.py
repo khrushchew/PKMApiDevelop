@@ -1,3 +1,8 @@
+from rest_framework_simplejwt.views import (
+    TokenObtainPairView,
+    TokenRefreshView,
+)
+
 from django.urls import include, path, re_path
 from rest_framework import routers
 
@@ -73,11 +78,11 @@ brigade_router = routers.SimpleRouter()
 brigade_router.register(r'brigades', BrigadeApiViewSet, basename='brigade')
 
 urlpatterns=[
+
+    path('login/', TokenObtainPairView.as_view(), name='token_obtain_pair'),
+    path('login/refresh/', TokenRefreshView.as_view(), name='token_refresh'),
+
     path('about/', AboutApiViewSet.as_view({'get': 'list'})),
-
-    path('login/', include('Core.LoginApi.LoginUrls')),
-
-    path('logout/', include('Core.LogoutApi.LogoutUrls')),
 
     # Subdivision
     path('<str:company_code>/', include(subdivision_router.urls)),
