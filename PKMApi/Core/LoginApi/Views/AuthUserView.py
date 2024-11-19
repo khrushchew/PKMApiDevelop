@@ -29,12 +29,12 @@ class AuthUserApiView(APIView):
 
     @swagger_auto_schema(
         operation_summary="Авторизация пользователя",
-        operation_description="Авторизирует пользователя по логину и паролю с учётом пройденного эдапа авторизации по устройству",
+        operation_description="Авторизирует пользователя по логину и паролю с учётом пройденного этапа авторизации по устройству",
         tags=['login'],
         manual_parameters=[company_code_param],
         request_body=AuthUserApiSerializer,
         responses={
-            200: openapi.Response(description="Успешный ответ", examples={"window": "Табель", "token": "5d5a3448-9918-4a4c-a254-a7d15b05207f", "groups": ["admin", "manager"]}),
+            200: openapi.Response(description="Успешный ответ", examples={"window": "Табель", "token": "5d5a3448-9918-4a4c-a254-a7d15b05207f", "groups": ["Директор", "Кадровик"]}),
             400: openapi.Response(description="Устройство с таким идентификатором уже существует"),
             404: openapi.Response(description="Такого зарегистрированного устройства не найдено"),
             500: openapi.Response(description="Ошибка сервера"),
