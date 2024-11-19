@@ -1,32 +1,37 @@
 from rest_framework.response import Response
 from rest_framework.exceptions import NotFound, ValidationError
-from rest_framework.viewsets import ModelViewSet
+from rest_framework.viewsets import ViewSet
 
 from ..Serializers.AreaSerializer import AreaApiSerializer
+from ..Serializers.AreaListSerializer import AreaListApiSerializer
 
 from Core.models.Area import Area
 from Core.models.Department import Department
 
 
-class AreaApiViewSet(ModelViewSet):
+class AreaApiViewSet(ViewSet):
 
     handler200 = Response(status=200)
     handler500 = Response({'error': 'Что-то пошло не так, повторите попытку позже'}, status=500)
 
-    serializer_class = AreaApiSerializer
-
-    def get_department(self, request):
-        department_pk = request.data.get('department_pk')
+    def get_department(self):
+        department_pk = self.request.data.get('department_pk')
         try:
             return Department.objects.get(pk=department_pk)
         except:
             raise NotFound({'error': 'Такого участка не найдено'})
 
     def get_area_list(self):
-        company_code = self.kwargs.get('company_code')
-        try:
-            return Area.objects.filter(department__platform__company__code=company_code)
-        except:
+        filters = {'department__platform__company__code': self.kwargs.get('company_code')}
+        opt_filters = ['department']
+        for i in opt_filters:
+            val = self.request.query_params.get('department')
+            if val:
+                filters[i] = val
+        areas = Area.objects.filter(**filters).order_by('indent')
+        if areas.exists():
+            return areas
+        else:
             raise NotFound({'error': 'Участков не найдено'})
         
     def get_area_entity(self):
@@ -43,10 +48,10 @@ class AreaApiViewSet(ModelViewSet):
 
         department = self.get_department()
 
-        if Area.objects.filter(indent=indent, platform__company__code=department.platform.company.code).exists():
+        if Area.objects.filter(indent=indent, department__platform__company__code=department.platform.company.code).exists():
             raise ValidationError({'error': 'Участок с таким идентификатором уже существует'})
         
-        if Area.objects.filter(name=name, platform__company__code=department.platform.company.code).exists():
+        if Area.objects.filter(name=name, department__platform__company__code=department.platform.company.code).exists():
             raise ValidationError({'error': 'Участок с таким названием уже существует'})
         
         try:
@@ -58,7 +63,7 @@ class AreaApiViewSet(ModelViewSet):
     def list(self, request, *args, **kwargs):
         areas = self.get_area_list()
         try:
-            serializer = self.get_serializer(areas, many=True)
+            serializer = AreaListApiSerializer(areas, many=True)
             return Response(serializer.data, status=200)
         except:
             return self.handler500
@@ -66,7 +71,7 @@ class AreaApiViewSet(ModelViewSet):
     def retrieve(self, request, *args, **kwargs):
         area = self.get_area_entity()
         try:
-            serializer = self.get_serializer(area)
+            serializer = AreaApiSerializer(area)
             return Response(serializer.data, status=200)
         except:
             return self.handler500

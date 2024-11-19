@@ -20,16 +20,16 @@ class AboutApiViewSet(ViewSet):
                 description="Успешный ответ",
                 examples={
                     "application/json": {
-                        "О приложении": {
-                            "Текущая версия": "1.0",
-                            "Обновление от": "2024-01-01",
-                            "Разработчик": "ООО ПКМ"
+                        "about application": {
+                            "version": "1.0",
+                            "update": "2024-01-01",
+                            "developer": "ООО ПКМ"
                         },
-                        "Контакты": {
-                            "Адрес": "ул. Пример, д. 1"
+                        "contacts": {
+                            "address": "ул. Пример, д. 1"
                         },
-                        "Правовая информация": "Некоторая правовая информация",
-                        "Инструкции": "Некоторые инструкции"
+                        "info": "Некоторая правовая информация",
+                        "instructions": "Некоторые инструкции"
                     }
                 }
             ),
@@ -41,16 +41,16 @@ class AboutApiViewSet(ViewSet):
         serializer = AboutSerializer(about, many=True)
         data = serializer.data
         result = {
-            "О приложении": {
-                "Текущая версия": data[0]['version'],
-                "Обновление от": data[0]['upd'],
-                "Разработчик": "ООО ПКМ"        
+            "about application": {
+                "version": data[0]['version'],
+                "update": data[0]['upd'],
+                "developer": "ООО ПКМ"        
             },
-            "Контакты": {
-                "Адрес": data[0]['address']
+            "contacts": {
+                "address": data[0]['address']
             },
-            "Правовая информация": data[0]['info'],
-            "Инcтрукции": data[0]['instruction'],
+            "info": data[0]['info'],
+            "instructions": data[0]['instruction'],
         }
         return Response(result, status=200)
     

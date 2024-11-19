@@ -1,5 +1,5 @@
 from .Company import Company
-from .Role import Role
+
 from .User import User
 from .Platform import Platform
 from .Department import Department
@@ -37,7 +37,7 @@ from .Uploadedreport import Uploadedreport
 
 from .Subdivision import Subdivision
 
-from .RoleOperator import RoleOperator
+
 
 
 
@@ -61,3 +61,4 @@ from .ShiftCalendar import ShiftCalendar
 
 
 from .About import About
+

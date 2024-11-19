@@ -6,4 +6,4 @@ from Core.models.User import User
 class AuthUserApiSerializer(ModelSerializer):
     class Meta:
         model = User
-        fields = ('login', 'password')
+        fields = ('username', 'password')

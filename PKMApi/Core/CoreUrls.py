@@ -2,7 +2,7 @@ from django.urls import include, path, re_path
 from rest_framework import routers
 
 from .SubdivisionApi.Views.SubdivisionViewSet import SubdivisionApiViewSet
-from .RoleApi.Views.RoleViewSet import RoleApiViewSet
+
 from .PlatformApi.Views.PlatformViewSet import PlatformApiViewSet
 from .DepartmentApi.Views.DepartmentViewSet import DepartmentApiViewSet
 from .AreaApi.Views.AreaApiViewSet import  AreaApiViewSet
@@ -15,14 +15,14 @@ from .MachineGroupApi.Views.MachineGroupViewSet import MachineGroupApiViewSet
 from .MachineTypeApi.Views.MachineTypeViewSet import MachineTypeApiViewSet
 from .MachineControlMethodApi.Views.MachineControlMethodView import MachineControlMethodApiViewSet
 from .MachineNameApi.Views.MachineNameViewSet import MachineNameApiViewSet
+from .BrigadeApi.Views.BrigadeViewSet import BrigadeApiViewSet
 
 # Subdivision
 subdivision_router = routers.SimpleRouter()
 subdivision_router.register(r'subdivisions', SubdivisionApiViewSet, basename='subdivision')
 
 # Role
-role_router = routers.SimpleRouter()
-role_router.register(r'roles', RoleApiViewSet, basename='role')
+
 
 # Platform
 platform_router = routers.SimpleRouter()
@@ -68,6 +68,10 @@ machine_control_method_router.register(r'machinecontrolmethods', MachineControlM
 machine_name_router = routers.SimpleRouter()
 machine_name_router.register(r'machinenames', MachineNameApiViewSet, basename='machinename')
 
+# Brigade
+brigade_router = routers.SimpleRouter()
+brigade_router.register(r'brigades', BrigadeApiViewSet, basename='brigade')
+
 urlpatterns=[
     path('about/', AboutApiViewSet.as_view({'get': 'list'})),
 
@@ -79,7 +83,7 @@ urlpatterns=[
     path('<str:company_code>/', include(subdivision_router.urls)),
 
     # Role
-    path('<str:company_code>/', include(role_router.urls)),
+    
 
     #Platform
     path('<str:company_code>/', include(platform_router.urls)),
@@ -113,5 +117,8 @@ urlpatterns=[
 
     # MachineName
     path('<str:company_code>/', include(machine_name_router.urls)),
+
+    # MachineName
+    path('<str:company_code>/', include(brigade_router.urls)),
 ]
 

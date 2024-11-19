@@ -18,8 +18,6 @@ class MachineName(models.Model):
     ratio = models.PositiveIntegerField(default=0, null=True, blank=True, verbose_name='Коэффициент многостаночности')
     tarife = models.PositiveIntegerField(default=0, null=True, blank=True, verbose_name='Сдельный тариф')
 
-    platform = models.ForeignKey('Platform', models.SET_NULL, null=True, blank=True, verbose_name='Площадка')
-    department = models.ForeignKey('Department', models.SET_NULL, null=True, blank=True, verbose_name='Цех')
     area = models.ForeignKey('Area', models.SET_NULL, null=True, blank=True, verbose_name='Участок')
     
     work_time = models.CharField(null=True, blank=True, verbose_name='Время работы')

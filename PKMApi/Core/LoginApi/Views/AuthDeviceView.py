@@ -28,7 +28,7 @@ class AuthDeviceApiView(APIView):
         manual_parameters=[company_code_param],
         request_body=AuthDeviceApiSerializer,
         responses={
-            200: openapi.Response(description="Успешный ответ",),
+            200: openapi.Response(description="Успешный ответ"),
             400: openapi.Response(description="Устройство с таким идентификатором уже существует"),
             404: openapi.Response(description="Такого зарегистрированного устройства не найдено"),
             500: openapi.Response(description="Ошибка сервера"),
