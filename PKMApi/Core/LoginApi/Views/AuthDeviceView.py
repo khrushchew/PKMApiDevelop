@@ -13,39 +13,30 @@ class AuthDeviceApiView(APIView):
     handler200 = Response(status=200)
     handler500 = Response({'error': 'Что-то пошло не так, повторите попыткку позже'}, status=500)
 
-    company_code_param = openapi.Parameter(
-        'company_code',  
-        openapi.IN_PATH,
-        description="Код компании",
-        type=openapi.TYPE_STRING,
-        required=True
-    )
-
     @swagger_auto_schema(
         operation_summary="Авторизация устройства",
         operation_description="Авторизирует текущее устройство по компании и идентификатору",
-        tags=['login'],
-        manual_parameters=[company_code_param],
+        tags=['login - Вход в систему'],
         request_body=AuthDeviceApiSerializer,
         responses={
-            200: openapi.Response(description="Успешный ответ"),
+            200: openapi.Response(description="Успешный ответ и возврат кода устройства"),
             400: openapi.Response(description="Устройство с таким идентификатором уже существует"),
             404: openapi.Response(description="Такого зарегистрированного устройства не найдено"),
             500: openapi.Response(description="Ошибка сервера"),
         },
     )
-    def post(self, request, company_code):
+    def post(self, request, *args, **kwargs):
         try:
             try:
-                device = Device.objects.get(company__code=company_code, code=request.data.get('code'))
+                device = Device.objects.get(company__code=request.data.get('company_code'), code=request.data.get('code'))
             except:
-                return Response({'error': 'Такого зарегистрированного устройства не найдено, проверьте введённые данные или обратитесь к администратору'}, status=404)
+                return Response({'detail': 'Такого зарегистрированного устройства не найдено, проверьте введённые данные или обратитесь к администратору'}, status=404)
             
             if device.counter == 1:
-                return Response({'error': 'Устройство с таким идентификатором уже существует'}, status=400)
+                return Response({'detail': 'Устройство с таким идентификатором уже существует'}, status=400)
             else:
                 device.counter = 1
                 device.save()
-                return self.handler200
+                return Response({'code': request.data.get("code")}, status=200)
         except:
             raise self.handler500

@@ -1,49 +1,53 @@
 from rest_framework.views import APIView
 from rest_framework.response import Response
 from rest_framework.exceptions import NotFound, AuthenticationFailed
+
 from drf_yasg.utils import swagger_auto_schema
 from drf_yasg import openapi
-from rest_framework_simplejwt.tokens import RefreshToken
+
 from django.contrib.auth import authenticate
+from rest_framework.permissions import IsAuthenticated
 
 from Core.models.User import User
 from ..Serializers.AuthUserSerializer import AuthUserApiSerializer
 
 
 class AuthUserApiView(APIView):
+
+    permission_classes = [IsAuthenticated]
+
     handler200 = Response(status=200)
-    handler500 = Response({'error': 'Что-то пошло не так, повторите попытку позже'}, status=500)
+    handler500 = Response({'detail': 'Что-то пошло не так, повторите попытку позже'}, status=500)
 
-    def post(self, request, company_code):
+    access_token_param = openapi.Parameter(
+        'Authorization',
+        openapi.IN_HEADER,
+        description='Токен доступа',
+        type=openapi.TYPE_STRING,
+        required=True,
+        default='JWT {token}'
+    )
 
-        data = request.data
+    @swagger_auto_schema(
+        tags=['login - Вход в систему'],
+        operation_summary='Получение групп пользователя (Доступно только при наличии access токена)',
+        operation_description='Получает все доступные группы пользователя',
+        manual_parameters=[access_token_param],
+        responses={
+            200: 'Вывод групп пользователя',
+            401: 'Ошибка входа'
+        }
+    )
+    def post(self, request):
 
-        username = data.get('username', None)
+        user = request.user
+        
+        if user.session:
+            raise AuthenticationFailed({'detail': 'Такой пользователь уже активен на другом устройстве'})
 
-        password = data.get('password', None)
-
-        if username is None or password is None:
-
-            return Response({'error': 'Нужен и логин, и пароль'}, status=400)
-
-        user = authenticate(username=username, password=password)
-
-        if user is None:
-
-            return Response({'error': 'Неверные данные'}, status=401)
-
-        refresh = RefreshToken.for_user(user)
-
-        refresh.payload.update({
-            'user_id': user.id,
-            'username': user.username
-        })
-
+        user.session = True
+        user.save()
 
         return Response({
-                'refresh': str(refresh),
-                'access': str(refresh.access_token),
-                'user': user.username,
                 'groups': [group.name for group in user.groups.all()],
             }, status=200)
-
