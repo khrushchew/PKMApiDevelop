@@ -54,6 +54,7 @@ INSTALLED_APPS = [
     'rest_framework',
     'drf_yasg',
     'Core',
+    'BIG_CALENDAR_API',
 ]
 
 

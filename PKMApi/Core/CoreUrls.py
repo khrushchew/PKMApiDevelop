@@ -80,6 +80,8 @@ urlpatterns=[
 
     path('about/', AboutApiViewSet.as_view({'get': 'list'})),
 
+    path('sys/', include('BIG_CALENDAR_API.urls')),
+
     # Subdivision
     path('<str:company_code>/', include(subdivision_router.urls)),
 

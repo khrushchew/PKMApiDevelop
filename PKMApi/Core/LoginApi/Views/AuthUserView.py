@@ -44,14 +44,25 @@ class AuthUserApiView(APIView):
 
         user = request.user
         
-        if user.session:
-            raise AuthenticationFailed({'detail': 'Такой пользователь уже активен на другом устройстве'})
+        # if user.session:
+            # raise AuthenticationFailed({'detail': 'Такой пользователь уже активен на другом устройстве'})
 
         user.session = True
         user.save()
 
+        if user.start_shift:
+            start_shift = user.start_shift.strftime('%d-%m-%Y %H:%M:%S')
+        else:
+            start_shift = None
+
+        if user.end_shift:
+            end_shift = user.end_shift.strftime('%d-%m-%Y %H:%M:%S')
+        else:
+            end_shift = None
+
         return Response({
                 'groups': [group.name for group in user.groups.all()],
-                'start_shift': user.start_shift.strftime('%Y-%m-%d %H:%M:%S'),
-                'time_now': timezone.now().strftime('%Y-%m-%d %H:%M:%S'),
+                'start_shift': start_shift,
+                'end_shift': end_shift,
+                'time_now': timezone.now().strftime('%d-%m-%Y %H:%M:%S'),
             }, status=200)
