@@ -1,4 +1,4 @@
-from BIG_CALENDAR_API.models.BIG_CALENDAR import BIG_CALENDAR
+from Core.models.BIG_CALENDAR import BIG_CALENDAR
 
 from rest_framework import serializers
 

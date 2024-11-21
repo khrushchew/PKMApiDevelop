@@ -6,6 +6,7 @@ class BIG_CALENDAR(models.Model):
 
     class Meta:
         db_table = 'BIG_CALENDAR'
+        app_label = "BIG_CALENDAR_API"
         verbose_name = 'КАЛЕНДАРЬ'
         verbose_name_plural = 'КАЛЕНДАРЬ'
 
