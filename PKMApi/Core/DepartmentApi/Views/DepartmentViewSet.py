@@ -16,18 +16,18 @@ from Core.models.Platform import Platform
 class DepartmentApiViewSet(ViewSet):
 
     handler200 = Response(status=200)
-    handler500 = Response({'error': 'Что-то пошло не так, повторите попытку позже'}, status=500)
+    handler500 = Response({'detail': 'Что-то пошло не так, повторите попытку позже'}, status=500)
 
     def get_platform(self, request):
         platform_pk = request.data.get('platform_pk')
         try:
             return Platform.objects.get(pk=platform_pk)
         except:
-            raise NotFound({'error': 'Такой площадки не найдено'})
+            raise NotFound({'detail': 'Такой площадки не найдено'})
 
     def get_department_list(self):
 
-        filters = {"platform__company__code": self.kwargs.get('company_code')}
+        filters = {"platform__company": self.request.user.company}
 
         opt_filters = ["platform"]
 
@@ -39,40 +39,41 @@ class DepartmentApiViewSet(ViewSet):
         if departments.exists():
             return departments
         else:
-            raise NotFound({'error': 'Цехов не найдено'})
+            raise NotFound({'detail': 'Цехов не найдено'})
         
     def get_department_entity(self):
-        id = self.kwargs.get('id')
         try:
-            return Department.objects.get(id=id)
+            return Department.objects.get(pk=self.kwargs.get('pk'))
         except:
-            raise NotFound({'error': 'Такого цеха не найдено'})
+            raise NotFound({'detail': 'Такого цеха не найдено'})
     
     def check_indent(self):
-        if Department.objects.filter(indent=self.request.data.get('indent'), platform__company__code=self.kwargs.get('company_code')).exists():
-            raise ValidationError({'error': 'Цех с таким идентификатором уже существует'})
+        if Department.objects.filter(indent=self.request.data.get('indent'), platform__company=self.request.user.company).exists():
+            raise ValidationError({'detail': 'Цех с таким идентификатором уже существует'})
     
     def check_name(self):
-        if Department.objects.filter(name=self.request.data.get('name'), platform__company__code=self.kwargs.get('company_code')).exists():
-            raise ValidationError({'error': 'Цех с таким названием уже существует'})
+        if Department.objects.filter(name=self.request.data.get('name'), platform__company=self.request.user.company).exists():
+            raise ValidationError({'detail': 'Цех с таким названием уже существует'})
 
-    company_code_param = openapi.Parameter(
-        'company_code',
-        openapi.IN_PATH,
-        description="Код компании",
+    access_token_param = openapi.Parameter(
+        'access',
+        openapi.IN_HEADER,
+        description="Код доступа",
         type=openapi.TYPE_STRING,
-        required=True
+        required=True,
+        default='JWT {token}'
     )
 
     @swagger_auto_schema(
         tags=['department - Цех'],
         operation_summary='Создание цеха',
         operation_description='Создаёт цех для определённой компании',
-        manual_parameters=[company_code_param],
+        manual_parameters=[access_token_param],
         request_body=DepartmentCreateApiSerializer,
         responses={
             201: "Успешное создание цеха",
             400: "Ошибка при обработке запроса",
+            401: "Ошибка прав доступа",
         }
     )
     def create(self, request, *args, **kwargs):
@@ -84,16 +85,18 @@ class DepartmentApiViewSet(ViewSet):
         
         serializer = DepartmentCreateApiSerializer(data=data)
         serializer.is_valid(raise_exception=True)
+        serializer.save()
         return self.handler200
 
     @swagger_auto_schema(
         tags=['department - Цех'],
         operation_summary='Вывод списка цехов',
         operation_description='Выводит список цехов для определённой компании',
-        manual_parameters=[company_code_param],
+        manual_parameters=[access_token_param],
         responses={
             200: "Вывод всех найденных цехов",
             400: "Ошибка при обработке запроса",
+            401: "Ошибка прав доступа",
             404: "Не найдено ни одного цеха",
             500: "Ошибка сервера"
         }
@@ -110,10 +113,11 @@ class DepartmentApiViewSet(ViewSet):
         tags=['department - Цех'],
         operation_summary='Вывод определённого цеха',
         operation_description='Выводит определённый цех для определённой компании',
-        manual_parameters=[company_code_param],
+        manual_parameters=[access_token_param],
         responses={
             200: "Вывод найденного цехов",
             400: "Ошибка при обработке запроса",
+            401: "Ошибка прав доступа",
             404: "Не найдено такого цеха",
             500: "Ошибка сервера"
         }
@@ -128,12 +132,13 @@ class DepartmentApiViewSet(ViewSet):
 
     @swagger_auto_schema(
         tags=['department - Цех'],
-        operation_summary='Изменения определённого цеха',
+        operation_summary='Изменение определённого цеха',
         operation_description='Изменяет определённый цех для определённой компании',
-        manual_parameters=[company_code_param],
+        manual_parameters=[access_token_param],
         responses={
             200: "Успешное изменение цеха",
             400: "Ошибка при обработке запроса",
+            401: "Ошибка прав доступа",
             404: "Не найдено такого цеха",
             500: "Ошибка сервера"
         }
@@ -150,7 +155,19 @@ class DepartmentApiViewSet(ViewSet):
         serializer.save()
         return self.handler200
 
-    
+    @swagger_auto_schema(
+        tags=['department - Цех'],
+        operation_summary='Удаление определённого цеха',
+        operation_description='Удаляет определённый цех для определённой компании',
+        manual_parameters=[access_token_param],
+        responses={
+            200: "Успешное удаление цеха",
+            400: "Ошибка при обработке запроса",
+            401: "Ошибка прав доступа",
+            404: "Не найдено такого цеха",
+            500: "Ошибка сервера"
+        }
+    )
     def destroy(self, request, *args, **kwargs):
         department = self.get_department_entity()
         try:

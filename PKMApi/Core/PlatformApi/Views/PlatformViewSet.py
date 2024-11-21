@@ -24,34 +24,27 @@ class PlatformApiViewSet(ViewSet):
     handler200 = Response(status=200)
     handler201 = Response(status=201)
     handler204 = Response(status=204)
-    handler500 = Response({'error': 'Что-то пошло не так, повторите попытку позже'}, status=500)
+    handler500 = Response({'detail': 'Что-то пошло не так, повторите попытку позже'}, status=500)
 
-    def get_company(self):
-        company_code = self.kwargs.get('company_code')
-        try:
-            return Company.objects.get(code=company_code).pk
-        except:
-            raise NotFound({'error': 'Такой компании не найдено'})
-    
     def get_platform_list(self):
         try:
-            return Platform.objects.filter(company__code=self.kwargs.get('company_code'))
+            return Platform.objects.filter(company=self.request.user.company).order_by('indent')
         except:
-            raise NotFound({'error': 'Площадок не найдено'})
+            raise NotFound({'detail': 'Площадок не найдено'})
     
     def get_platform_entity(self):
         try:
             return Platform.objects.get(pk=self.kwargs.get('pk'))
         except:
-            raise NotFound({'error': 'Такой площадки не найдено'})
+            raise NotFound({'detail': 'Такой площадки не найдено'})
 
     def check_name(self):
-        if Platform.objects.filter(name=self.request.data.get('name'), company__code=self.kwargs.get('company_code')).exists():
-            raise ValidationError({'error': 'Площадка с таким названием уже существует'})
+        if Platform.objects.filter(name=self.request.data.get('name'), company=self.request.user.company).exists():
+            raise ValidationError({'detail': 'Площадка с таким названием уже существует'})
     
     def check_indent(self):
-        if Platform.objects.filter(indent=self.request.data.get('indent'), company__code=self.kwargs.get('company_code')).exists():
-            raise ValidationError({'error': 'Площадка с таким идентификатором уже существует'})
+        if Platform.objects.filter(indent=self.request.data.get('indent'), company=self.request.user.company).exists():
+            raise ValidationError({'detail': 'Площадка с таким идентификатором уже существует'})
 
     company_code_param = openapi.Parameter(
         'company_code',
@@ -61,16 +54,25 @@ class PlatformApiViewSet(ViewSet):
         required=True
     )
 
+    access_token_param = openapi.Parameter(
+        'access',
+        openapi.IN_HEADER,
+        description='Токен доступа',
+        type=openapi.TYPE_STRING,
+        required=True,
+        default='JWT {token}'
+    )
 
     @swagger_auto_schema(
         tags=['platform - Площадка'],
         operation_summary ='Создание площадки',
         operation_description='Создаёт площадку для определённой компании',
-        manual_parameters=[company_code_param,],
         request_body=PlatformCreateApiSerializer,
+        manual_parameters=[access_token_param],
         responses={
             201: "Успешное создание площадки",
             400: "Ошибка при обработке запроса",
+            401: "Ошибка прав доступа",
             500: "Ошибка сервера"
         }
     )
@@ -78,7 +80,7 @@ class PlatformApiViewSet(ViewSet):
 
         data = request.data
 
-        data["company"] = self.get_company()
+        data["company"] = request.user.company.pk
 
         self.check_name()
         self.check_indent()
@@ -95,15 +97,16 @@ class PlatformApiViewSet(ViewSet):
         tags=['platform - Площадка'],
         operation_summary = 'Вывод списка площадок',
         operation_description= 'Выводит список площадок для определённой компании',
-        manual_parameters=[company_code_param,],
+        manual_parameters=[access_token_param],
         responses={
             200: "Вывод всех найденных площадок",
+            401: "Ошибка прав доступа",
             404: "Ни одной площадки не найдено",
             500: "Ошибка сервера"
         }
     )
-
     def list(self, request, *args, **kwargs):
+
         platforms = self.get_platform_list()
 
         try:
@@ -116,9 +119,10 @@ class PlatformApiViewSet(ViewSet):
         tags=['platform - Площадка'],
         operation_summary = 'Вывод определённой площадки',
         operation_description= 'Выводит единственную площадку для определённой компании',
-        manual_parameters=[company_code_param,],
+        manual_parameters=[access_token_param],
         responses={
             200: "Вывод найденной площадок",
+            401: "Ошибка прав доступа",
             404: "Площадки не найдено",
             500: "Ошибка сервера"
         }
@@ -135,11 +139,12 @@ class PlatformApiViewSet(ViewSet):
         tags=['platform - Площадка'],
         operation_summary = 'Изменение определённой площадки',
         operation_description= 'Меняет определённую площадку для определённой компании',
-        manual_parameters=[company_code_param,],
+        manual_parameters=[access_token_param],
         request_body=PlatformUpdateApiSerializer,
         responses={
             200: "Успешное изменение",
             400: "Ошибка при обработке запроса",
+            401: "Ошибка прав доступа",
             404: "Площадки не найдено",
             500: "Ошибка сервера"
         }
@@ -167,14 +172,16 @@ class PlatformApiViewSet(ViewSet):
         tags=['platform - Площадка'],
         operation_summary = 'Удаление определённой площадки',
         operation_description= 'Удаляет определённую площадку для определённой компании',
-        manual_parameters=[company_code_param,],
+        manual_parameters=[access_token_param],
         responses={
             200: "Успешное удаление",
+            401: "Ошибка прав доступа",
             404: "Площадки не найдено",
             500: "Ошибка сервера"
         }
     )        
     def destroy(self, request, *args, **kwargs):
+        
         platform = self.get_platform_entity()
 
         try:

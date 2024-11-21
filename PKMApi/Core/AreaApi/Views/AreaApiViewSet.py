@@ -22,7 +22,7 @@ class AreaApiViewSet(ViewSet):
             raise NotFound({'error': 'Такого участка не найдено'})
 
     def get_area_list(self):
-        filters = {'department__platform__company__code': self.kwargs.get('company_code')}
+        filters = {'department__platform__company': self.request.user.company}
         opt_filters = ['department']
         for i in opt_filters:
             val = self.request.query_params.get('department')
@@ -41,25 +41,28 @@ class AreaApiViewSet(ViewSet):
         except:
             raise NotFound({'error': 'Такой площадки не найдено'})
     
+    def check_indent(self):
+        if Area.objects.filter(indent=self.request.data.get('indent'), department__platform__company=self.request.user.company).exists():
+            raise ValidationError({'error': 'Участок с таким идентификатором уже существует'})
+
+    def check_name(self):
+        if Area.objects.filter(name=self.request.data.get('name'), department__platform__company=self.request.user.company).exists():
+            raise ValidationError({'error': 'Участок с таким названием уже существует'})
+
     def create(self, request, *args, **kwargs):
 
-        indent = request.data.get('indent')
-        name = request.data.get('name')
+        self.check_indent()
+        self.check_name()
 
-        department = self.get_department()
+        serializer = AreaApiSerializer(data=request.data)
+        serializer.is_valid(raise_exception=True)
 
-        if Area.objects.filter(indent=indent, department__platform__company__code=department.platform.company.code).exists():
-            raise ValidationError({'error': 'Участок с таким идентификатором уже существует'})
-        
-        if Area.objects.filter(name=name, department__platform__company__code=department.platform.company.code).exists():
-            raise ValidationError({'error': 'Участок с таким названием уже существует'})
-        
         try:
-            Area.objects.create(indent=indent, name=name, department=department)
+            serializer.save()
             return self.handler200
         except:
             return self.handler500
-    
+        
     def list(self, request, *args, **kwargs):
         areas = self.get_area_list()
         try:

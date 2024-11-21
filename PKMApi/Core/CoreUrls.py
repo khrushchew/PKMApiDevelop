@@ -2,7 +2,7 @@ from django.urls import include, path, re_path
 from rest_framework import routers
 
 from .SubdivisionApi.Views.SubdivisionViewSet import SubdivisionApiViewSet
-
+from .RoleApi.Views.RoleViewSet import RoleApiViewSet
 from .PlatformApi.Views.PlatformViewSet import PlatformApiViewSet
 from .DepartmentApi.Views.DepartmentViewSet import DepartmentApiViewSet
 from .AreaApi.Views.AreaApiViewSet import  AreaApiViewSet
@@ -22,7 +22,8 @@ subdivision_router = routers.SimpleRouter()
 subdivision_router.register(r'subdivisions', SubdivisionApiViewSet, basename='subdivision')
 
 # Role
-
+role_router = routers.SimpleRouter()
+role_router.register(r'roles', RoleApiViewSet, basename='role')
 
 # Platform
 platform_router = routers.SimpleRouter()
@@ -83,13 +84,13 @@ urlpatterns=[
     path('<str:company_code>/', include(subdivision_router.urls)),
 
     # Role
-    
+    path('', include(role_router.urls)),
 
     #Platform
-    path('<str:company_code>/', include(platform_router.urls)),
+    path('', include(platform_router.urls)),
 
     # Department
-    path('<str:company_code>/', include(department_router.urls)),
+    path('', include(department_router.urls)),
 
     # Area
     path('<str:company_code>/', include(area_router.urls)),

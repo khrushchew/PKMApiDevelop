@@ -17,6 +17,9 @@ class User(AbstractUser):
 
     session = models.BooleanField(null=True, blank=True, verbose_name='Сессия')
 
+    start_shift = models.DateTimeField(null=True, blank=True, verbose_name='Начал смену')
+    end_shift = models.DateTimeField(null=True, blank=True, verbose_name='Закончил смену')
+
     def __str__(self):
         return f"{self.username}"
     

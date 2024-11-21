@@ -6,9 +6,8 @@ from .Department import Department
 from .Area import Area
 from .Allocation import Allocation
 
+
 from .Device import Device
-
-
 
 
 from .Batcharchive import Batcharchive

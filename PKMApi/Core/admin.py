@@ -16,10 +16,12 @@ from .models.ShiftDay import ShiftDay
 from .models.ShiftWorkingDayMode import ShiftWorkingDayMode
 from .models.ShiftMode import ShiftMode
 from .models.ShiftCalendar import ShiftCalendar
+from .models.Shift import Shift
 from .models.Area import Area
 from .models.Platform import Platform
 from .models.Department import Department
 from .models.Brigade import Brigade
+
 from django import forms
 
 admin.site.register(About)
@@ -44,10 +46,10 @@ class UserAdmin(BaseUserAdmin):
     add_form = UserCreationForm
     fieldsets = (
         (None, {'fields': ('username', 'password')}),
-        ('Персональная информация', {'fields': ('first_name', 'last_name', 'email', 'surname', 'profile_picture')}),
+        ('Персональная информация', {'fields': ('first_name', 'last_name', 'surname', 'email', 'profile_picture')}),
         ('Организация', {'fields': ('company', 'subdivision', 'position')}),
-        ('Права доступа', {'fields': ('is_active', 'is_staff', 'is_superuser', 'groups', 'user_permissions', 'session')}),
-        ('Важные даты', {'fields': ('last_login', 'date_joined')}),
+        ('Права доступа', {'fields': ('is_active', 'is_staff', 'is_superuser', 'groups', 'session')}),
+        ('Важные даты', {'fields': ('start_shift', 'end_shift', 'date_joined')}),
     )
     add_fieldsets = (
         (None, {
@@ -81,3 +83,4 @@ admin.site.register(Department)
 admin.site.register(Area)
 
 admin.site.register(Brigade)
+admin.site.register(Shift)

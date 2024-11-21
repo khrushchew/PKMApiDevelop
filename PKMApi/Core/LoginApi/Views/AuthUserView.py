@@ -11,6 +11,8 @@ from rest_framework.permissions import IsAuthenticated
 from Core.models.User import User
 from ..Serializers.AuthUserSerializer import AuthUserApiSerializer
 
+from django.utils import timezone
+
 
 class AuthUserApiView(APIView):
 
@@ -50,4 +52,6 @@ class AuthUserApiView(APIView):
 
         return Response({
                 'groups': [group.name for group in user.groups.all()],
+                'start_shift': user.start_shift.strftime('%Y-%m-%d %H:%M:%S'),
+                'time_now': timezone.now().strftime('%Y-%m-%d %H:%M:%S'),
             }, status=200)
