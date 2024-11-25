@@ -1,24 +1,12 @@
-from rest_framework.views import APIView
-from rest_framework.permissions import IsAuthenticated
-from rest_framework.response import Response
-from rest_framework.exceptions import AuthenticationFailed
+from logout.views.logout_view import LogoutView
 
 from drf_yasg.utils import swagger_auto_schema
 from drf_yasg import openapi
 
-from ..Serializers.LogoutUserSerializer import LogoutUserApiSerializer
 
-from Core.models.User import User
-
-from rest_framework_simplejwt.tokens import RefreshToken
-
-
-class LogoutUserApiView(APIView):
-    
-    permission_classes = [IsAuthenticated]
-
+class LogoutSwaggerView(LogoutView):
     access_token_param = openapi.Parameter(
-        'access',
+        'access_token',
         openapi.IN_HEADER,
         description='Токен доступа',
         type=openapi.TYPE_STRING,
@@ -37,9 +25,4 @@ class LogoutUserApiView(APIView):
         }
     )
     def post(self, request, *args, **kwargs):
-        user = request.user
-        
-        user.session = False
-        user.save()
-
-        return Response({'detail': 'Вы успешно вышли из системы!'}, status=200)
+        return super().post(request, *args, **kwargs)

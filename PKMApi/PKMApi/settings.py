@@ -51,11 +51,23 @@ INSTALLED_APPS = [
     'django.contrib.sessions',
     'django.contrib.messages',
     'django.contrib.staticfiles',
+
+    # Downloaded apps 
     'rest_framework',
     'drf_yasg',
+
+    # Models
     'Core',
+    
+    # Created apps
     'BIG_CALENDAR_API',
+
+    # Login/Logout
     'app_auth',
+    'logout',
+
+
+    # Company Work Structure 
     'platform_api',
     'department',
     'area',
@@ -73,6 +85,7 @@ MIDDLEWARE = [
     'django.contrib.messages.middleware.MessageMiddleware',
     'django.middleware.clickjacking.XFrameOptionsMiddleware',
 
+    # Custom update last_login
     'PKMApi.middlewares.update_last_login_middleware.UpdateLastLoginMiddleware'
 ]
 
@@ -158,8 +171,10 @@ REST_FRAMEWORK = {
     ],
 }
 
+# Custom user model
 AUTH_USER_MODEL = 'Core.User'
 
+# Settings of token
 SIMPLE_JWT = {
     "ACCESS_TOKEN_LIFETIME": timedelta(minutes=120),
     "REFRESH_TOKEN_LIFETIME": timedelta(days=7),

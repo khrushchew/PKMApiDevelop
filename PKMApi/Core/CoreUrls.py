@@ -63,7 +63,7 @@ urlpatterns=[
 
     path('login/', include('app_auth.urls')),
 
-    path('logout/', include('Core.LogoutApi.LogoutUrls')),
+    path('logout/', include('logout.urls')),
 
     path('about/', AboutApiViewSet.as_view({'get': 'list'})),
 
