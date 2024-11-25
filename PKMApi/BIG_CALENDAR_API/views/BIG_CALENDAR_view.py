@@ -21,4 +21,4 @@ class BIG_CALENDAR_Api_View(ViewSet):
             serializer.is_valid(raise_exception=True)
             serializer.save()
 
-        return Response(status=200)
+        return Response(status=201)

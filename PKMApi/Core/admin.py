@@ -17,9 +17,7 @@ from .models.ShiftWorkingDayMode import ShiftWorkingDayMode
 from .models.ShiftMode import ShiftMode
 from .models.ShiftCalendar import ShiftCalendar
 from .models.Shift import Shift
-from .models.Area import Area
-from .models.Platform import Platform
-from .models.Department import Department
+
 from .models.Brigade import Brigade
 
 from django import forms
@@ -49,7 +47,7 @@ class UserAdmin(BaseUserAdmin):
         ('Персональная информация', {'fields': ('first_name', 'last_name', 'surname', 'email', 'profile_picture')}),
         ('Организация', {'fields': ('company', 'subdivision', 'position')}),
         ('Права доступа', {'fields': ('is_active', 'is_staff', 'is_superuser', 'groups', 'session')}),
-        ('Важные даты', {'fields': ('start_shift', 'end_shift', 'date_joined')}),
+        ('Важные даты', {'fields': ('start_shift', 'end_shift', 'last_login')}),
     )
     add_fieldsets = (
         (None, {
@@ -77,10 +75,6 @@ admin.site.register(ShiftDay)
 admin.site.register(ShiftWorkingDayMode)
 admin.site.register(ShiftCalendar)
 admin.site.register(ShiftMode)
-
-admin.site.register(Platform)
-admin.site.register(Department)
-admin.site.register(Area)
 
 admin.site.register(Brigade)
 admin.site.register(Shift)

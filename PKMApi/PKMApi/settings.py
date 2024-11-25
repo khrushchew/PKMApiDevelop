@@ -55,6 +55,11 @@ INSTALLED_APPS = [
     'drf_yasg',
     'Core',
     'BIG_CALENDAR_API',
+    'app_auth',
+    'platform_api',
+    'department',
+    'area',
+
 ]
 
 
@@ -67,6 +72,8 @@ MIDDLEWARE = [
     'django.middleware.csrf.CsrfViewMiddleware',
     'django.contrib.messages.middleware.MessageMiddleware',
     'django.middleware.clickjacking.XFrameOptionsMiddleware',
+
+    'PKMApi.middlewares.update_last_login_middleware.UpdateLastLoginMiddleware'
 ]
 
 ROOT_URLCONF = 'PKMApi.urls'
@@ -143,7 +150,7 @@ REST_FRAMEWORK = {
     'PAGE_SIZE': 100,
 
     'DEFAULT_PERMISSION_CLASSES': [
-    'rest_framework.permissions.AllowAny',
+        'rest_framework.permissions.AllowAny',
     ],
 
     'DEFAULT_AUTHENTICATION_CLASSES': [
@@ -154,7 +161,7 @@ REST_FRAMEWORK = {
 AUTH_USER_MODEL = 'Core.User'
 
 SIMPLE_JWT = {
-    "ACCESS_TOKEN_LIFETIME": timedelta(minutes=60),
+    "ACCESS_TOKEN_LIFETIME": timedelta(minutes=1),
     "REFRESH_TOKEN_LIFETIME": timedelta(days=7),
     "ROTATE_REFRESH_TOKENS": False,
     "BLACKLIST_AFTER_ROTATION": False,
