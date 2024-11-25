@@ -1,15 +1,10 @@
-from rest_framework.response import Response
-from rest_framework.viewsets import ViewSet
+
+from about.views.about_view import AboutView
 
 from drf_yasg.utils import swagger_auto_schema
 from drf_yasg import openapi
 
-from ..Serializers.AboutSerializer import AboutSerializer
-
-from Core.models.About import About
-
-
-class AboutApiViewSet(ViewSet):
+class AboutSwaggerView(AboutView):
 
     @swagger_auto_schema(
         operation_summary="Вывод информации о приложении",
@@ -29,20 +24,5 @@ class AboutApiViewSet(ViewSet):
             }
         )
     def list(self, request, *args, **kwargs):
-        about = About.objects.all()
-        serializer = AboutSerializer(about, many=True)
-        data = serializer.data
-        result = {
-            "about application": {
-                "version": data[0]['version'],
-                "update": data[0]['upd'],
-                "developer": "ООО ПКМ"        
-            },
-            "contacts": {
-                "address": data[0]['address']
-            },
-            "info": data[0]['info'],
-            "instructions": data[0]['instruction'],
-        }
-        return Response(result, status=200)
+        return super().list(request, *args, **kwargs)
     

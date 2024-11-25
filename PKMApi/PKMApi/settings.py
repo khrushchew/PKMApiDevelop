@@ -66,11 +66,16 @@ INSTALLED_APPS = [
     'app_auth',
     'logout',
 
+    # About
+    'about',
 
     # Company Work Structure 
     'platform_api',
     'department',
     'area',
+
+    # Company personal
+    'subdivision',
 
 ]
 
