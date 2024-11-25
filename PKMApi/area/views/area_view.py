@@ -1,9 +1,12 @@
+from rest_framework.permissions import IsAuthenticated
+
 from rest_framework.response import Response
 from rest_framework.exceptions import NotFound, ValidationError
 from rest_framework.viewsets import ViewSet
 
 from ..serializers.area_retrieve_serializer import AreaRetrieveSerializer
 from ..serializers.area_list_serializer import AreaListSerializer
+from ..serializers.area_create_serializer import AreaCreateSerializer
 
 from Core.models.Area import Area
 from Core.models.Department import Department
@@ -11,15 +14,18 @@ from Core.models.Department import Department
 
 class AreaView(ViewSet):
 
+    permission_classes = [IsAuthenticated]
+
+    handler201 = Response(status=201)
     handler200 = Response(status=200)
-    handler500 = Response({'error': 'Что-то пошло не так, повторите попытку позже'}, status=500)
+    handler500 = Response({'detail': 'Что-то пошло не так, повторите попытку позже'}, status=500)
 
     def get_department(self):
         department_pk = self.request.data.get('department_pk')
         try:
             return Department.objects.get(pk=department_pk)
         except:
-            raise NotFound({'error': 'Такого участка не найдено'})
+            raise NotFound({'detail': 'Такого участка не найдено'})
 
     def get_area_list(self):
         filters = {'department__platform__company': self.request.user.company}
@@ -32,34 +38,34 @@ class AreaView(ViewSet):
         if areas.exists():
             return areas
         else:
-            raise NotFound({'error': 'Участков не найдено'})
+            raise NotFound({'detail': 'Участков не найдено'})
         
     def get_area_entity(self):
         pk = self.kwargs.get('pk')
         try:
             return Area.objects.get(pk=pk)
         except:
-            raise NotFound({'error': 'Такой площадки не найдено'})
+            raise NotFound({'detail': 'Такой площадки не найдено'})
     
     def check_indent(self):
         if Area.objects.filter(indent=self.request.data.get('indent'), department__platform__company=self.request.user.company).exists():
-            raise ValidationError({'error': 'Участок с таким идентификатором уже существует'})
+            raise ValidationError({'detail': 'Участок с таким идентификатором уже существует'})
 
     def check_name(self):
         if Area.objects.filter(name=self.request.data.get('name'), department__platform__company=self.request.user.company).exists():
-            raise ValidationError({'error': 'Участок с таким названием уже существует'})
+            raise ValidationError({'detail': 'Участок с таким названием уже существует'})
 
     def create(self, request, *args, **kwargs):
 
         self.check_indent()
         self.check_name()
 
-        serializer = AreaRetrieveSerializer(data=request.data)
+        serializer = AreaCreateSerializer(data=request.data)
         serializer.is_valid(raise_exception=True)
 
         try:
             serializer.save()
-            return self.handler200
+            return self.handler201
         except:
             return self.handler500
         
@@ -79,21 +85,19 @@ class AreaView(ViewSet):
         except:
             return self.handler500
 
-    def partial_update(self, request, *args, **kwargs):
-        indent = request.data.get('indent')
-        name = request.data.get('name')
-    
+    def update(self, request, *args, **kwargs):
+        
+        data = request.data
+        
+        self.check_indent()
+        self.check_indent()
+
         area = self.get_area_entity()
 
+        serializer = AreaCreateSerializer(area, data=data, partial=True)
+        serializer.is_valid(raise_exception=True)
         try:
-            if indent:
-                area.indent = indent
-            if name:
-                area.name = name
-            if request.data.get('department_pk'):
-                department = self.get_department()
-                area.department = department
-            area.save()
+            serializer.save()
             return self.handler200
         except:
             return self.handler500

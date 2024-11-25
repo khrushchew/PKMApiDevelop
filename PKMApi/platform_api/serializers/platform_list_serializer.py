@@ -1,11 +1,11 @@
 from rest_framework import serializers
 
 from Core.models.Platform import Platform
-from Core.models.Area import Area
 from Core.models.MachineName import MachineName
-from Core.models.User import User
+from Core.models.Allocation import Allocation
 
 from django.contrib.auth.models import Group
+
 
 class PlatformListSerializer(serializers.ModelSerializer):
     machines = serializers.SerializerMethodField(method_name='get_machines')
@@ -21,14 +21,14 @@ class PlatformListSerializer(serializers.ModelSerializer):
     
     def get_masters(self, obj):
         try:
-            master = Group.objects.get(name='Мастер')
+            master = Allocation.objects.filter(group__name='Мастер', platform=obj)
         except:
             return 0
-        return User.objects.filter(groups=master).count()
+        return master.values('user').distinct().count()
     
     def get_operators(self, obj):
         try:
-            operator = Group.objects.get(name='Оператор')
+            operator = Allocation.objects.filter(group__name='Оператор', platform=obj)
         except:
             return 0
-        return User.objects.filter(groups=operator).count()
+        return operator.values('user').distinct().count()

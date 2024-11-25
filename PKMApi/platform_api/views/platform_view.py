@@ -1,6 +1,3 @@
-from drf_yasg.utils import swagger_auto_schema
-from drf_yasg import openapi
-
 from rest_framework.response import Response
 from rest_framework.exceptions import NotFound, ValidationError
 from rest_framework.viewsets import ViewSet
@@ -14,7 +11,7 @@ from Core.models.Platform import Platform
 from rest_framework.permissions import IsAuthenticated
 
 
-class PlatformViewSet(ViewSet):
+class PlatformView(ViewSet):
 
     permission_classes = [IsAuthenticated]
 
@@ -43,36 +40,6 @@ class PlatformViewSet(ViewSet):
         if Platform.objects.filter(indent=self.request.data.get('indent'), company=self.request.user.company).exists():
             raise ValidationError({'detail': 'Площадка с таким идентификатором уже существует'})
 
-    company_code_param = openapi.Parameter(
-        'company_code',
-        openapi.IN_PATH,
-        description="Код компании",
-        type=openapi.TYPE_STRING,
-        required=True
-    )
-
-    access_token_param = openapi.Parameter(
-        'access',
-        openapi.IN_HEADER,
-        description='Токен доступа',
-        type=openapi.TYPE_STRING,
-        required=True,
-        default='JWT {token}'
-    )
-
-    @swagger_auto_schema(
-        tags=['platform - Площадка'],
-        operation_summary ='Создание площадки',
-        operation_description='Создаёт площадку для определённой компании',
-        request_body=PlatformCreateSerializer,
-        manual_parameters=[access_token_param],
-        responses={
-            201: "Успешное создание площадки",
-            400: "Ошибка при обработке запроса",
-            401: "Ошибка прав доступа",
-            500: "Ошибка сервера"
-        }
-    )
     def create(self, request, *args, **kwargs):
 
         data = request.data
@@ -90,18 +57,6 @@ class PlatformViewSet(ViewSet):
         except:
             return self.handler500
     
-    @swagger_auto_schema(
-        tags=['platform - Площадка'],
-        operation_summary = 'Вывод списка площадок',
-        operation_description= 'Выводит список площадок для определённой компании',
-        manual_parameters=[access_token_param],
-        responses={
-            200: "Вывод всех найденных площадок",
-            401: "Ошибка прав доступа",
-            404: "Ни одной площадки не найдено",
-            500: "Ошибка сервера"
-        }
-    )
     def list(self, request, *args, **kwargs):
 
         platforms = self.get_platform_list()
@@ -112,18 +67,6 @@ class PlatformViewSet(ViewSet):
         except:
             return self.handler500
 
-    @swagger_auto_schema(
-        tags=['platform - Площадка'],
-        operation_summary = 'Вывод определённой площадки',
-        operation_description= 'Выводит единственную площадку для определённой компании',
-        manual_parameters=[access_token_param],
-        responses={
-            200: "Вывод найденной площадок",
-            401: "Ошибка прав доступа",
-            404: "Площадки не найдено",
-            500: "Ошибка сервера"
-        }
-    )
     def retrieve(self, request,  *args, **kwargs):
         platform = self.get_platform_entity()
         try:
@@ -132,20 +75,6 @@ class PlatformViewSet(ViewSet):
         except:
             return self.handler500
         
-    @swagger_auto_schema(
-        tags=['platform - Площадка'],
-        operation_summary = 'Изменение определённой площадки',
-        operation_description= 'Меняет определённую площадку для определённой компании',
-        manual_parameters=[access_token_param],
-        request_body=PlatformUpdateSerializer,
-        responses={
-            200: "Успешное изменение",
-            400: "Ошибка при обработке запроса",
-            401: "Ошибка прав доступа",
-            404: "Площадки не найдено",
-            500: "Ошибка сервера"
-        }
-    )    
     def update(self, request, *args, **kwargs):
 
         data = request.data
@@ -165,18 +94,6 @@ class PlatformViewSet(ViewSet):
         except:
             return self.handler500
 
-    @swagger_auto_schema(
-        tags=['platform - Площадка'],
-        operation_summary = 'Удаление определённой площадки',
-        operation_description= 'Удаляет определённую площадку для определённой компании',
-        manual_parameters=[access_token_param],
-        responses={
-            200: "Успешное удаление",
-            401: "Ошибка прав доступа",
-            404: "Площадки не найдено",
-            500: "Ошибка сервера"
-        }
-    )        
     def destroy(self, request, *args, **kwargs):
         
         platform = self.get_platform_entity()

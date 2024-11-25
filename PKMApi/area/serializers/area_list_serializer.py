@@ -2,9 +2,7 @@ from rest_framework import serializers
 
 from Core.models.Area import Area
 from Core.models.MachineName import MachineName
-from Core.models.User import User
-
-from django.contrib.auth.models import Group
+from Core.models.Allocation import Allocation
 
 
 class AreaListSerializer(serializers.ModelSerializer):
@@ -21,15 +19,15 @@ class AreaListSerializer(serializers.ModelSerializer):
     
     def get_masters(self, obj):
         try:
-            master = Group.objects.get(name='Мастер')
+            master = Allocation.objects.filter(group__name='Мастер', area=obj)
         except:
             return 0
-        return User.objects.filter(groups=master).count()
+        return master.values('user').distinct().count()
     
     def get_operators(self, obj):
         try:
-            operator = Group.objects.get(name='Оператор')
+            operator = Allocation.objects.filter(group__name='Оператор', area=obj)
         except:
             return 0
-        return User.objects.filter(groups=operator).count()
+        return operator.values('user').distinct().count()
     

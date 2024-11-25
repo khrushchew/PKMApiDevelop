@@ -4,9 +4,6 @@ from rest_framework import routers
 from .SubdivisionApi.Views.SubdivisionViewSet import SubdivisionApiViewSet
 from .RoleApi.Views.RoleViewSet import RoleApiViewSet
 
-from platform_api.views.platform_view import PlatformViewSet
-from department.views.department_view import DepartmentViewSet
-
 from .AboutApi.Views.AboutViewSet import AboutApiViewSet
 from .ShiftWorkingDayModeApi.Views.ShiftWorkingDayModeViewSet import ShiftWorkingDayModeApiViewSet
 from .ShiftModeApi.Views.ShiftModeViewSet import ShiftModeApiViewSet

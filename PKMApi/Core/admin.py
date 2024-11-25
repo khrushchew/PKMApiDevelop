@@ -1,11 +1,12 @@
 from django.contrib import admin
 from django.contrib.auth.admin import UserAdmin as BaseUserAdmin
+from django.contrib.admin import ModelAdmin
 
 from .models.About import About
 from .models.Company import Company
 from .models.Device import Device
 from .models import User
-
+from .models.Allocation import Allocation
 from .models.Subdivision import Subdivision
 from .models.MachineStyle import MachineStyle
 from .models.MachineGroup import MachineGroup
@@ -25,6 +26,13 @@ from django import forms
 admin.site.register(About)
 admin.site.register(Company)
 admin.site.register(Device)
+
+@admin.register(Allocation)
+class AllocationAdmin(ModelAdmin):
+    fieldsets = (
+        (None, {'fields': ('user', 'group', 'platform', 'department', 'area', 'brigade', 'shift')}),
+    )
+    filter_horizontal = ('department', 'area')
 
 class UserCreationForm(forms.ModelForm):
     class Meta:
