@@ -147,7 +147,7 @@ DATABASES = {
     'NAME': Name,
     'USER': User,
     'PASSWORD': Password,
-    'HOST': 'db',
+    'HOST': HOST,
     'PORT': Port},
 }
 
