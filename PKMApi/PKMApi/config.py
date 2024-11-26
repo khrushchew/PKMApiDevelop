@@ -9,13 +9,9 @@ AWS_S3_REGION_NAME = 'ru-central1'
 DEFAULT_FILE_STORAGE = 'yandex_s3_storage.ClientImgStorage'
 MEDIA_URL = 'https://userstoragepkm.storage.yandexcloud.net/media/'
 
-DATABASES = {
-'default':
-{
-    'ENGINE': 'django.db.backends.postgresql',
-    'NAME': 'main_db',
-    'USER': 'postgres',
-    'PASSWORD': '12345678',
-    'HOST': 'localhost',
-    'PORT': '5432',},
-}
+
+NAME = 'main_db'
+USER = 'postgres'
+PASSWORD = '12345678'
+HOST = 'localhost'
+PORT = '5432'

@@ -20,6 +20,8 @@ BASE_DIR = Path(__file__).resolve().parent.parent
 
 from .config import AWS_ACCESS_KEY_ID, AWS_SECRET_ACCESS_KEY, AWS_STORAGE_BUCKET_NAME, AWS_S3_ENDPOINT_URL, AWS_S3_REGION_NAME, DEFAULT_FILE_STORAGE, MEDIA_URL
 
+from .config import NAME, USER, PASSWORD, HOST, PORT
+
 AWS_ACCESS_KEY_ID = AWS_ACCESS_KEY_ID
 AWS_SECRET_ACCESS_KEY =  AWS_SECRET_ACCESS_KEY
 AWS_STORAGE_BUCKET_NAME =  AWS_STORAGE_BUCKET_NAME
@@ -117,8 +119,35 @@ WSGI_APPLICATION = 'PKMApi.wsgi.application'
 
 # Database
 # https://docs.djangoproject.com/en/5.1/ref/settings/#databases
+import os
 
-DATABASES = DATABASES
+Name = NAME
+User = USER
+Password = PASSWORD
+Host = HOST
+Port = PORT
+
+if os.environ['NAME']:
+    Name = os.environ['NAME']
+if os.environ['USER']:
+    User = os.environ['USER']
+if os.environ['PASSWORD']:
+    Password = os.environ['PASSWORD']
+if os.environ['HOST']:
+    Host = os.environ['HOST']
+if os.environ['PORT']:
+    Port = os.environ['PORT']
+
+DATABASES = {
+'default':
+{
+    'ENGINE': 'django.db.backends.postgresql',
+    'NAME': Name,
+    'USER': User,
+    'PASSWORD': Password,
+    'HOST': Host,
+    'PORT': Port},
+}
 
 
 # Password validation
