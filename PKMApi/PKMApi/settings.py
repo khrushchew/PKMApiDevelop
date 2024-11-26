@@ -38,7 +38,7 @@ MEDIA_URL = MEDIA_URL
 SECRET_KEY = SECRET_KEY
 
 # SECURITY WARNING: don't run with debug turned on in production!
-DEBUG = True
+DEBUG = False
 
 ALLOWED_HOSTS = ["www.api.dev.pkmt.tech", "api.dev.pkmt.tech"]
 
