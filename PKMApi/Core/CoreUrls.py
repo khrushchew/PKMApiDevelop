@@ -1,6 +1,5 @@
 from django.urls import include, path
 
-
 urlpatterns=[
 
     path('login/', include('app_auth.urls')),
@@ -11,12 +10,6 @@ urlpatterns=[
 
     path('sys/', include('BIG_CALENDAR_API.urls')),
 
-    # Subdivision
-    # path('<str:company_code>/', include(subdivision_router.urls)),
-
-    # Role
-    # path('', include(role_router.urls)),
-
     #Platform
     path('platforms/', include('platform_api.urls')),
 
@@ -25,6 +18,12 @@ urlpatterns=[
 
     # Area
     path('areas/', include('area.urls')),
+
+    # Subdivision
+    path('subdivisions/', include('subdivision.urls')),
+
+    # Role
+    # path('', include(role_router.urls)),
 
     # ShiftWorkingDayMode
     # path('<str:company_code>/', include(shift_working_day_mode_router.urls)),

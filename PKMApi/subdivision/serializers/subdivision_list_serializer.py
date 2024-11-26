@@ -3,7 +3,7 @@ from rest_framework import serializers
 from Core.models.Subdivision import Subdivision
 from Core.models.User import User
 
-class SubdivisionListApiSerializer(serializers.ModelSerializer):
+class SubdivisionListSerializer(serializers.ModelSerializer):
     users = serializers.SerializerMethodField(method_name='get_users')
 
     class Meta:

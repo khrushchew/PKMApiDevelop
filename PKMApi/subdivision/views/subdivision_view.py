@@ -1,59 +1,58 @@
 from drf_yasg.utils import swagger_auto_schema
 from drf_yasg import openapi
 
+from rest_framework.permissions import IsAuthenticated
+
 from rest_framework.viewsets import ViewSet
 from rest_framework.response import Response
-from rest_framework.exceptions import NotFound, ValidationError
 
-from ..Serializers.SubdivisionCreateSerializer import SubdivisionCreateApiSerializer
-from ..Serializers.SubdivisionListSerializer import SubdivisionListApiSerializer
-from ..Serializers.SubdivisionRetrieveSerializer import SubdivisionRetrieveApiSerializer
-from ..Serializers.SubdivisionUpdateSerializer import SubdivisionUpdateApiSerializer
+from rest_framework.exceptions import NotFound
+
+from subdivision.serializers.subdivision_create_serializer import SubdivisionCreateSerializer
+from subdivision.serializers.subdivision_list_serializer import SubdivisionListSerializer
+from subdivision.serializers.subdivision_retrieve_serializer import SubdivisionRetrieveSerializer
+from subdivision.serializers.subdivision_update_serializer import SubdivisionUpdateSerializer
 
 from Core.models.Subdivision import Subdivision
 from Core.models.Company import Company
 from Core.models.User import User
 
-class SubdivisionApiViewSet(ViewSet):
+class SubdivisionView(ViewSet):
+
+    permission_classes = [IsAuthenticated]
+
+    handler200 = Response(status=200)
+    handler201 = Response({'detail': 'Подразделение успешно создано'}, status=201)
+    handler500 = Response({'detail': 'Что-то пошло не так, повторите попытку позже'}, status=500)
+
     def get_subdivision_list(self):
-        company_code = self.kwargs.get('company_code')
         try:
-            return Subdivision.objects.filter(company__code=company_code).order_by('name')
+            return Subdivision.objects.filter(company=self.request.user.company).order_by('name')
         except:
-            raise NotFound({'error': 'Подразделений не найдено'})
+            raise NotFound({'detail': 'Подразделений не найдено'})
     
     def get_subdivision_entity(self):
         pk = self.kwargs.get('pk')
         try:
             return Subdivision.objects.get(pk=pk)
         except:
-            raise NotFound({'error': 'Такого подразделения не найдено'})
+            raise NotFound({'detail': 'Такого подразделения не найдено'})
 
-    def get_company(self):
-        company_code = self.kwargs.get('company_code')
-        try:
-            return Company.objects.get(code=company_code)
-        except:
-            raise NotFound({'error': 'Такой компании не найдено'})
-
-    def check_name(self):
-        if Subdivision.objects.filter(name=self.request.data.get('name'), company__code=self.kwargs.get('company_code')).exists():
-            raise ValidationError({'error': 'Подразделение с таким названием уже существует'})
-        
-    company_code_param = openapi.Parameter(
-        'company_code',
-        openapi.IN_PATH,
-        description="Код компании",
+    access_token_param = openapi.Parameter(
+        'access_token',
+        openapi.IN_HEADER,
+        description="Токен доступа",
         type=openapi.TYPE_STRING,
-        required=True
+        required=True,
+        default='JWT {token}'
     )
 
     @swagger_auto_schema(
         tags=['subdivision - Подразделение'],
         operation_summary='Создание подразделения',
         operation_description='Создаёт подразделение для определённой компании',
-        manual_parameters=[company_code_param],
-        request_body=SubdivisionCreateApiSerializer,
+        manual_parameters=[access_token_param],
+        request_body=SubdivisionCreateSerializer,
         responses={
             201: "Успешное создание подразделения",
             400: "Ошибка при обработке запроса",
@@ -61,24 +60,24 @@ class SubdivisionApiViewSet(ViewSet):
         }
     )
     def create(self, request, *args, **kwargs):
-        name = request.data.get('name')
 
-        company = self.get_company()
+        data = request.data
+        data['company'] = request.user.company.pk
 
-        if Subdivision.objects.filter(name=name, company__code=company.code).exists():
-            return Response({'error': 'Подразделение с таким названием уже существует'}, status=409)
+        serializer = SubdivisionCreateSerializer(data=data, context={'request': request})
+        serializer.is_valid(raise_exception=True)
 
         try:    
-            Subdivision.objects.create(name=name, company=company)
-            return Response(status=201)
+            serializer.save()
+            return self.handler201
         except:
-            return Response({'error': 'Что-то пошло не так, повторите попытку позже'}, status=500)
+            return self.handler500
         
     @swagger_auto_schema(
         tags=['subdivision - Подразделение'],
         operation_summary='Вывод списка подразделений',
         operation_description='Выводит список подразделений для определённой компании',
-        manual_parameters=[company_code_param],
+        manual_parameters=[access_token_param],
         responses={
             200: "Успешная обработка запроса",
             400: "Ошибка при обработке запроса",
@@ -88,25 +87,24 @@ class SubdivisionApiViewSet(ViewSet):
     def list(self, request, *args, **kwargs):
         subdivisions = self.get_subdivision_list()
 
-        try:
-            serializer = SubdivisionListApiSerializer(subdivisions, many=True)
+        serializer = SubdivisionListSerializer(subdivisions, many=True)
 
-            if serializer.data:
-                for i in range(1, len(serializer.data) + 1):
-                    serializer.data[i - 1].setdefault("indent", i)
+        if serializer.data:
+            for i in range(1, len(serializer.data) + 1):
+                serializer.data[i - 1].setdefault("indent", i)
 
-            data = serializer.data
-            data.append({'indent': 0, 'name': 'Резерв', 'users': User.objects.filter(subdivision=None).count()})
+        data = serializer.data
+        data.append({'indent': 0, 'name': 'Резерв', 'users': User.objects.filter(subdivision=None).count()})
         
-            return Response(sorted(data, key=lambda i: i["indent"]), status=200)
-        except:
-            return Response({'error': 'Что-то пошло не так, повторите попытку позже'}, status=500)
+        return Response(sorted(data, key=lambda i: i["indent"]), status=200)
+        # except:
+        #     return Response({'detali': 'Что-то пошло не так, повторите попытку позже'}, status=500)
     
     @swagger_auto_schema(
         tags=['subdivision - Подразделение'],
         operation_summary='Вывод определённого подразделения',
         operation_description='Выводит определённое подразделение для определённой компании',
-        manual_parameters=[company_code_param],
+        manual_parameters=[access_token_param],
         responses={
             200: "Успешная обработка запроса",
             400: "Ошибка при обработке запроса",
@@ -120,13 +118,13 @@ class SubdivisionApiViewSet(ViewSet):
             serializer = SubdivisionRetrieveApiSerializer(subdivision)
             return Response(serializer.data, status=200)
         except:
-            return Response({'error': 'Что-то пошло не так, повторите попытку позже'}, status=500)
+            return Response({'detali': 'Что-то пошло не так, повторите попытку позже'}, status=500)
         
     @swagger_auto_schema(
         tags=['subdivision - Подразделение'],
         operation_summary='Изменение определённого подразделения',
         operation_description='Изменяет определённое подразделение для определённой компании',
-        manual_parameters=[company_code_param],
+        manual_parameters=[access_token_param],
         responses={
             200: "Успешная обработка запроса",
             400: "Ошибка при обработке запроса",
@@ -147,13 +145,13 @@ class SubdivisionApiViewSet(ViewSet):
             serializer.save()
             return Response(status=200)
         except:
-            return Response({'error': 'Что-то пошло не так, повторите попытку позже'}, status=500)
+            return Response({'detali': 'Что-то пошло не так, повторите попытку позже'}, status=500)
         
     @swagger_auto_schema(
         tags=['subdivision - Подразделение'],
         operation_summary='Удаление определённого подразделения',
         operation_description='Удаляет определённое подразделение для определённой компании',
-        manual_parameters=[company_code_param],
+        manual_parameters=[access_token_param],
         responses={
             200: "Успешная обработка запроса",
             400: "Ошибка при обработке запроса",
@@ -167,5 +165,5 @@ class SubdivisionApiViewSet(ViewSet):
             subdivision.delete()
             return Response(status=200)
         except:
-            return Response({'error': 'Что-то пошло не так, повторите попытку позже'}, status=500)
+            return Response({'detali': 'Что-то пошло не так, повторите попытку позже'}, status=500)
         
