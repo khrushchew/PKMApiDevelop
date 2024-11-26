@@ -14,7 +14,6 @@ from datetime import timedelta
 from pathlib import Path
 
 from .config import SECRET_KEY
-
 # Build paths inside the project like this: BASE_DIR / 'subdir'.
 BASE_DIR = Path(__file__).resolve().parent.parent
 
@@ -120,6 +119,9 @@ WSGI_APPLICATION = 'PKMApi.wsgi.application'
 # Database
 # https://docs.djangoproject.com/en/5.1/ref/settings/#databases
 import os
+from dotenv import load_dotenv
+
+load_dotenv()
 
 Name = NAME
 User = USER
@@ -127,16 +129,16 @@ Password = PASSWORD
 Host = HOST
 Port = PORT
 
-if os.environ['NAME']:
-    Name = os.environ['NAME']
-if os.environ['USER']:
-    User = os.environ['USER']
-if os.environ['PASSWORD']:
-    Password = os.environ['PASSWORD']
-if os.environ['HOST']:
-    Host = os.environ['HOST']
-if os.environ['PORT']:
-    Port = os.environ['PORT']
+if os.getenv('NAME'):
+    Name = os.getenv('NAME')
+if os.getenv('USER'):
+    User = os.getenv('USER')
+if os.getenv('PASSWORD'):
+    Password = os.getenv('PASSWORD')
+if os.getenv('HOST'):
+    Host = os.getenv('HOST')
+if os.getenv('PORT'):
+    Port = os.getenv('PORT')
 
 DATABASES = {
 'default':
