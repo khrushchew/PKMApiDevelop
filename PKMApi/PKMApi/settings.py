@@ -128,7 +128,6 @@ User = USER
 Password = PASSWORD
 Host = HOST
 Port = PORT
-
 if os.getenv('NAME'):
     Name = os.getenv('NAME')
 if os.getenv('USER'):
@@ -144,11 +143,11 @@ DATABASES = {
 'default':
 {
     'ENGINE': 'django.db.backends.postgresql',
-    'NAME': 'master_plan_dev',
+    'NAME': Name,
     'USER': 'postgres',
-    'PASSWORD': 'Client05022005!',
-    'HOST': '87.228.37.61',
-    'PORT': '5432'},
+    'PASSWORD': Password,
+    'HOST': Host,
+    'PORT': Port},
 }
 
 STATIC_URL = '/static/'
