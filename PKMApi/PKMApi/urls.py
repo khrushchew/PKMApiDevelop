@@ -20,7 +20,7 @@ from django.contrib import admin
 from .yasg import urlpatterns as doc_urls
 
 urlpatterns = [
-    path('', admin.site.urls),
+    path('admin/', admin.site.urls),
     path('', include('Core.CoreUrls')),
 ]
 

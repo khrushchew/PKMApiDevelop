@@ -38,7 +38,7 @@ MEDIA_URL = MEDIA_URL
 SECRET_KEY = SECRET_KEY
 
 # SECURITY WARNING: don't run with debug turned on in production!
-DEBUG = True
+DEBUG = False
 
 ALLOWED_HOSTS = ["www.api.dev.pkmt.tech", "api.dev.pkmt.tech", "*"]
 
@@ -129,23 +129,23 @@ Password = PASSWORD
 Host = HOST
 Port = PORT
 
-if os.getenv('NAME'):
-    Name = os.getenv('NAME')
-if os.getenv('USER'):
-    User = os.getenv('USER')
-if os.getenv('PASSWORD'):
-    Password = os.getenv('PASSWORD')
-if os.getenv('HOST'):
-    Host = os.getenv('HOST')
-if os.getenv('PORT'):
-    Port = os.getenv('PORT')
+if os.getenv('DB_NAME'):
+    Name = os.getenv('DB_NAME')
+if os.getenv('DB_USER'):
+    User = os.getenv('DB_USER')
+if os.getenv('DB_PASSWORD'):
+    Password = os.getenv('DB_PASSWORD')
+if os.getenv('DB_HOST'):
+    Host = os.getenv('DB_HOST')
+if os.getenv('DB_PORT'):
+    Port = os.getenv('DB_PORT')
 
 DATABASES = {
 'default':
 {
     'ENGINE': 'django.db.backends.postgresql',
     'NAME': Name,
-    'USER': 'postgres',
+    'USER': User,
     'PASSWORD': Password,
     'HOST': Host,
     'PORT': Port},
@@ -251,3 +251,7 @@ SIMPLE_JWT = {
     "SLIDING_TOKEN_OBTAIN_SERIALIZER": "rest_framework_simplejwt.serializers.TokenObtainSlidingSerializer",
     "SLIDING_TOKEN_REFRESH_SERIALIZER": "rest_framework_simplejwt.serializers.TokenRefreshSlidingSerializer",
 }
+
+SESSION_COOKIE_AGE = 3600  # 1 день
+SESSION_EXPIRE_AT_BROWSER_CLOSE = True  # Сессия заканчивается при закрытии браузера
+SESSION_SAVE_EVERY_REQUEST = True  # Сохраняем сессию при каждом запросе
