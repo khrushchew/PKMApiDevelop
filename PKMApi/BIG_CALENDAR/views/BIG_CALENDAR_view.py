@@ -4,7 +4,7 @@ from rest_framework.permissions import IsAdminUser
 
 from datetime import date, timedelta
 
-from BIG_CALENDAR_API.serializers.BIG_CALENDAR_serializer import BIG_CALENDAR_Api_Serializer
+from BIG_CALENDAR.serializers.BIG_CALENDAR_serializer import BIG_CALENDAR_Api_Serializer
 
 
 class BIG_CALENDAR_Api_View(ViewSet):

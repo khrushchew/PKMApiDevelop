@@ -8,7 +8,7 @@ urlpatterns=[
 
     path('about/', include('about.urls')),
 
-    path('sys/', include('BIG_CALENDAR_API.urls')),
+    path('sys/', include('BIG_CALENDAR.urls')),
 
     #Platform
     path('platforms/', include('platform_api.urls')),

@@ -40,7 +40,7 @@ SECRET_KEY = SECRET_KEY
 # SECURITY WARNING: don't run with debug turned on in production!
 DEBUG = True
 
-ALLOWED_HOSTS = ["www.api.dev.pkmt.tech", "api.dev.pkmt.tech"]
+ALLOWED_HOSTS = ["www.api.dev.pkmt.tech", "api.dev.pkmt.tech", "*"]
 
 
 # Application definition
@@ -61,7 +61,7 @@ INSTALLED_APPS = [
     'Core',
     
     # Created apps
-    'BIG_CALENDAR_API',
+    'BIG_CALENDAR',
 
     # Login/Logout
     'app_auth',
@@ -139,7 +139,7 @@ if os.getenv('HOST'):
     Host = os.getenv('HOST')
 if os.getenv('PORT'):
     Port = os.getenv('PORT')
-print(Host)
+
 DATABASES = {
 'default':
 {
