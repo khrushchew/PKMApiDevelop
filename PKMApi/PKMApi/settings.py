@@ -139,7 +139,7 @@ if os.getenv('HOST'):
     Host = os.getenv('HOST')
 if os.getenv('PORT'):
     Port = os.getenv('PORT')
-
+print(Host)
 DATABASES = {
 'default':
 {

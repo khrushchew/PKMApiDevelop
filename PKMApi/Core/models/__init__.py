@@ -1,4 +1,4 @@
-
+from .BIG_CALENDAR import BIG_CALENDAR
 
 from .Company import Company
 
@@ -38,9 +38,6 @@ from .Uploadedreport import Uploadedreport
 
 from .Subdivision import Subdivision
 
-
-
-from .BIG_CALENDAR import BIG_CALENDAR
 
 from .MachineStyle import MachineStyle
 from .MachineGroup import MachineGroup
