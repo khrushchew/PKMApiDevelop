@@ -1,6 +1,6 @@
 
 from about.views.about_view import AboutView
-
+from Core.swagger_params import ACCESS_TOKEN_PARAM
 from drf_yasg.utils import swagger_auto_schema
 from drf_yasg import openapi
 

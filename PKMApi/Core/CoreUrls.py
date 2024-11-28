@@ -1,9 +1,12 @@
 from django.urls import include, path
 from django.contrib import admin
 
+from PKMApi.yasg import urlpatterns as doc_urls
+from django.views.generic.base import RedirectView
 
 urlpatterns=[
-
+    
+    path('', RedirectView.as_view(url='/admin/', permanent=True)),
     path('admin/', admin.site.urls),
 
     path('login/', include('app_auth.urls')),
@@ -25,6 +28,9 @@ urlpatterns=[
 
     # Subdivision
     path('subdivisions/', include('subdivision.urls')),
+
+    # Shift
+    path('shifts/', include('shift.urls')),
 
     # Role
     # path('', include(role_router.urls)),
@@ -57,3 +63,4 @@ urlpatterns=[
     # path('<str:company_code>/', include(brigade_router.urls)),
 ]
 
+urlpatterns += doc_urls

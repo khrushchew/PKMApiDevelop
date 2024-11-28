@@ -59,7 +59,7 @@ INSTALLED_APPS = [
 
     # Models
     'Core',
-    
+
     # Created apps
     'BIG_CALENDAR',
 
@@ -69,6 +69,9 @@ INSTALLED_APPS = [
 
     # About
     'about',
+
+    # Shift
+    'shift',
 
     # Company Work Structure 
     'platform_api',
@@ -95,12 +98,12 @@ MIDDLEWARE = [
     'PKMApi.middlewares.update_last_login_middleware.UpdateLastLoginMiddleware'
 ]
 
-ROOT_URLCONF = 'PKMApi.urls'
+ROOT_URLCONF = 'Core.CoreUrls'
 
 TEMPLATES = [
     {
         'BACKEND': 'django.template.backends.django.DjangoTemplates',
-        'DIRS': [],
+        'DIRS': [BASE_DIR / 'templates'],
         'APP_DIRS': True,
         'OPTIONS': {
             'context_processors': [

@@ -23,6 +23,8 @@ from .models.Brigade import Brigade
 
 from django import forms
 
+admin.site.index_title = "Добро пожаловать в панель управления Master Plan"
+
 admin.site.register(About)
 admin.site.register(Company)
 admin.site.register(Device)

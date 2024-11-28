@@ -1,6 +1,3 @@
-from drf_yasg.utils import swagger_auto_schema
-from drf_yasg import openapi
-
 from rest_framework.permissions import IsAuthenticated
 
 from rest_framework.viewsets import ViewSet
@@ -38,27 +35,6 @@ class SubdivisionView(ViewSet):
         except:
             raise NotFound({'detail': 'Такого подразделения не найдено'})
 
-    access_token_param = openapi.Parameter(
-        'access_token',
-        openapi.IN_HEADER,
-        description="Токен доступа",
-        type=openapi.TYPE_STRING,
-        required=True,
-        default='JWT {token}'
-    )
-
-    @swagger_auto_schema(
-        tags=['subdivision - Подразделение'],
-        operation_summary='Создание подразделения',
-        operation_description='Создаёт подразделение для определённой компании',
-        manual_parameters=[access_token_param],
-        request_body=SubdivisionCreateSerializer,
-        responses={
-            201: "Успешное создание подразделения",
-            400: "Ошибка при обработке запроса",
-            500: "Ошибка сервера",
-        }
-    )
     def create(self, request, *args, **kwargs):
 
         data = request.data
@@ -73,17 +49,6 @@ class SubdivisionView(ViewSet):
         except:
             return self.handler500
         
-    @swagger_auto_schema(
-        tags=['subdivision - Подразделение'],
-        operation_summary='Вывод списка подразделений',
-        operation_description='Выводит список подразделений для определённой компании',
-        manual_parameters=[access_token_param],
-        responses={
-            200: "Успешная обработка запроса",
-            400: "Ошибка при обработке запроса",
-            500: "Ошибка сервера",
-        }
-    )
     def list(self, request, *args, **kwargs):
         subdivisions = self.get_subdivision_list()
 
@@ -100,44 +65,22 @@ class SubdivisionView(ViewSet):
         # except:
         #     return Response({'detali': 'Что-то пошло не так, повторите попытку позже'}, status=500)
     
-    @swagger_auto_schema(
-        tags=['subdivision - Подразделение'],
-        operation_summary='Вывод определённого подразделения',
-        operation_description='Выводит определённое подразделение для определённой компании',
-        manual_parameters=[access_token_param],
-        responses={
-            200: "Успешная обработка запроса",
-            400: "Ошибка при обработке запроса",
-            500: "Ошибка сервера",
-        }
-    )
     def retrieve(self, request, *args, **kwargs):
         subdivision = self.get_subdivision_entity()
 
         try:
-            serializer = SubdivisionRetrieveApiSerializer(subdivision)
+            serializer = SubdivisionRetrieveSerializer(subdivision)
             return Response(serializer.data, status=200)
         except:
             return Response({'detali': 'Что-то пошло не так, повторите попытку позже'}, status=500)
-        
-    @swagger_auto_schema(
-        tags=['subdivision - Подразделение'],
-        operation_summary='Изменение определённого подразделения',
-        operation_description='Изменяет определённое подразделение для определённой компании',
-        manual_parameters=[access_token_param],
-        responses={
-            200: "Успешная обработка запроса",
-            400: "Ошибка при обработке запроса",
-            500: "Ошибка сервера",
-        }
-    )
+
     def update(self, request, *args, **kwargs):
         
         subdivision = self.get_subdivision_entity()
 
         self.check_name()
 
-        serializer = SubdivisionUpdateApiSerializer(subdivision, data=request.data, partial=True)
+        serializer = SubdivisionUpdateSerializer(subdivision, data=request.data, partial=True)
 
         serializer.is_valid(raise_exception=True)
 
@@ -147,17 +90,6 @@ class SubdivisionView(ViewSet):
         except:
             return Response({'detali': 'Что-то пошло не так, повторите попытку позже'}, status=500)
         
-    @swagger_auto_schema(
-        tags=['subdivision - Подразделение'],
-        operation_summary='Удаление определённого подразделения',
-        operation_description='Удаляет определённое подразделение для определённой компании',
-        manual_parameters=[access_token_param],
-        responses={
-            200: "Успешная обработка запроса",
-            400: "Ошибка при обработке запроса",
-            500: "Ошибка сервера",
-        }
-    )
     def destroy(self, request, *args, **kwargs):
         subdivision = self.get_subdivision_entity()
 
