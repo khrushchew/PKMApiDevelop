@@ -12,8 +12,8 @@ schema_view = get_schema_view(
             "Здесь расположены все ручки для управления приложением.\n\n"
             "Полезные ссылки:\n"
             "- [Административная панель](/admin/)\n"
-            "- [ReDoc документация](/redoc/)\n"
             "- [Swagger документация](/swagger/)\n"
+            "- [ReDoc документация](/redoc/)\n"
         ),
         license=openapi.License(name="License"),
     ),
