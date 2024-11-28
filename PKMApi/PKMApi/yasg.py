@@ -5,15 +5,20 @@ from drf_yasg import openapi
 from rest_framework.authentication import SessionAuthentication
 
 schema_view = get_schema_view(
-   openapi.Info(
-      title="API приложения Master Plan",
-      default_version='0.1.0',
-      description="Здесь расположены все ручки для управления приложением",
-      license=openapi.License(name="License"),
-   ),
-   public=True,
-   permission_classes=(permissions.IsAdminUser,),
-   authentication_classes=(SessionAuthentication,),
+    openapi.Info(
+        title="API приложения Master Plan",
+        default_version='0.1.0',
+        description=(
+            "Здесь расположены все ручки для управления приложением.\n\n"
+            "Полезные ссылки:\n"
+            "- [Административная панель](/admin/)\n"
+            "- [ReDoc документация](/redoc/)\n"
+        ),
+        license=openapi.License(name="License"),
+    ),
+    public=True,
+    permission_classes=(permissions.IsAdminUser,),
+    authentication_classes=(SessionAuthentication,),
 )
 
 urlpatterns = [
