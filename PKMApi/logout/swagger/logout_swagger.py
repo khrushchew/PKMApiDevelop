@@ -6,7 +6,7 @@ from drf_yasg import openapi
 
 class LogoutSwaggerView(LogoutView):
     access_token_param = openapi.Parameter(
-        'access_token',
+        'Authorization',
         openapi.IN_HEADER,
         description='Токен доступа',
         type=openapi.TYPE_STRING,
