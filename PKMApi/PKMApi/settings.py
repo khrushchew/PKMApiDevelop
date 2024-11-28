@@ -252,6 +252,6 @@ SIMPLE_JWT = {
     "SLIDING_TOKEN_REFRESH_SERIALIZER": "rest_framework_simplejwt.serializers.TokenRefreshSlidingSerializer",
 }
 
-SESSION_COOKIE_AGE = 3600  # 1 день
+SESSION_COOKIE_AGE = 86400  # 1 день
 SESSION_EXPIRE_AT_BROWSER_CLOSE = True  # Сессия заканчивается при закрытии браузера
 SESSION_SAVE_EVERY_REQUEST = True  # Сохраняем сессию при каждом запросе
