@@ -1,69 +1,77 @@
 from rest_framework.response import Response
 from rest_framework.viewsets import ModelViewSet
 from rest_framework.exceptions import NotFound, ValidationError
+from rest_framework.permissions import IsAuthenticated
 
-from ..Serializers.ShiftWorkingDayModeSerializer import ShiftWorkingDayModeApiSerializer
+from datetime import datetime
+
+from shift_working_day_mode.serializers.shift_working_day_mode_create_serializer import ShiftWorkingDayModeCreateSerializer
+from shift_working_day_mode.serializers.shift_working_day_mode_update_serializer import ShiftWorkingDayModeUpdateSerializer
+from shift_working_day_mode.serializers.shift_working_day_mode_list_serializer import ShiftWorkingDayModeListSerializer
+from shift_working_day_mode.serializers.shift_working_day_mode_retrieve_serializer import ShiftWorkingDayModeRetrieveSerializer
 
 from Core.models.ShiftWorkingDayMode import ShiftWorkingDayMode
 
-from Core.models.Company import Company
 
+class ShiftWorkingDayModeView(ModelViewSet):
 
-class ShiftWorkingDayModeApiViewSet(ModelViewSet):
+    permission_classes = [IsAuthenticated]
     
-    serializer_class = ShiftWorkingDayModeApiSerializer
-
     handler200 = Response(status=200)
-    handler500 = Response({'error': 'Что-то пошло не так, повторите попытку позже'}, status=500)
+    handler201 = Response({'detail': 'Режим рабочего дня успешно создан'}, status=201)
+    handler500 = Response({'detail': 'Что-то пошло не так, повторите попытку позже'}, status=500)
 
-    def get_company(self):
-        company_code = self.kwargs.get('company_code')
-        try:
-            return Company.objects.get(code=company_code)
-        except:
-            raise NotFound({'error': 'Такой компании не найдено'})
-    
     def get_shift_working_day_mode_list(self):
-        shift_working_day_modes = ShiftWorkingDayMode.objects.filter(company__code=self.get_company().code)
+        shift_working_day_modes = ShiftWorkingDayMode.objects.filter(company=self.request.user.company)
         if shift_working_day_modes.exists():
             return shift_working_day_modes
         else:
-            raise NotFound({'error': 'Режимов рабочего дня не найдено'})
+            raise NotFound({'detail': 'Режимов рабочего дня не найдено'})
 
     def code_validation(self, code, company):
         if ShiftWorkingDayMode.objects.filter(code=code, company=company).exists():
-            raise ValidationError({'error': 'Такой код режима рабочего дня уже существует'})
+            raise ValidationError({'detail': 'Такой код режима рабочего дня уже существует'})
     
     def get_shift_working_day_mode_entity(self):
         try:
             return ShiftWorkingDayMode.objects.get(pk=self.kwargs.get('pk'))
         except:
-            raise NotFound({'error': 'Такого режима рабочего дня не найдено'})
+            raise NotFound({'detail': 'Такого режима рабочего дня не найдено'})
 
     def create(self, request, *args, **kwargs):
-        company = self.get_company()
-
         data = request.data
-        data['company'] = company.pk
 
-        self.code_validation(code=request.data.get('code'), company=company)
+        data['company'] = request.user.company.pk
 
-        serializer = self.get_serializer(data=data)
+        serializer = ShiftWorkingDayModeCreateSerializer(data=data)
         serializer.is_valid(raise_exception=True)
 
         try:
             serializer.save()
-            return self.handler200
+            return self.handler201
         except:
             return self.handler500
 
     def list(self, request, *args, **kwargs):
         shift_working_day_modes = self.get_shift_working_day_mode_list()
-        try:
-            serializer = self.get_serializer(shift_working_day_modes, many=True)
-            return Response(serializer.data, status=200)
-        except:
-            return self.handler500
+        # try:
+        serializer = ShiftWorkingDayModeListSerializer(shift_working_day_modes, many=True)
+
+        data = serializer.data
+
+        for i in data:
+            for j in range(1, 11):
+                
+                try:
+                    i[f'pause_res_{j}'] = str(datetime.strptime(i[f'end_pause_{j}'], '%H:%M:%S') - datetime.strptime(i[f'start_pause_{j}'], '%H:%M:%S'))
+                except:
+                    i[f'pause_res_{j}'] = None
+
+
+
+        return Response(data, status=200)
+        # except:
+        #     return self.handler500
         
     def retrieve(self, request, *args, **kwargs):
         shift_working_day_mode = self.get_shift_working_day_mode_entity()

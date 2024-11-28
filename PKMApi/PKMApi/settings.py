@@ -72,6 +72,7 @@ INSTALLED_APPS = [
 
     # Shift
     'shift',
+    'shift_working_day_mode',
 
     # Company Work Structure 
     'platform_api',

@@ -3,7 +3,7 @@ from rest_framework import serializers
 from Core.models.ShiftWorkingDayMode import ShiftWorkingDayMode
 
 
-class ShiftWorkingDayModeApiSerializer(serializers.ModelSerializer):
+class ShiftWorkingDayModeRetrieveSerializer(serializers.ModelSerializer):
     class Meta:
         model = ShiftWorkingDayMode
         fields = ('pk', 'code', 'name', 'company', 'start_time', 'end_time', 

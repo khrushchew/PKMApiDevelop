@@ -39,7 +39,7 @@ urlpatterns=[
     # path('', include(role_router.urls)),
 
     # ShiftWorkingDayMode
-    # path('<str:company_code>/', include(shift_working_day_mode_router.urls)),
+    path('shift_working_day_modes/', include('shift_working_day_mode.urls')),
 
     # ShiftMode
     # path('<str:company_code>/', include(shift_mode_router.urls)),
