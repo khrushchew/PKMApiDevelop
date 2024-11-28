@@ -13,6 +13,7 @@ schema_view = get_schema_view(
             "Полезные ссылки:\n"
             "- [Административная панель](/admin/)\n"
             "- [ReDoc документация](/redoc/)\n"
+            "- [Swagger документация](/swagger/)\n"
         ),
         license=openapi.License(name="License"),
     ),
