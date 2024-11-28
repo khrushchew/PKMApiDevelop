@@ -2,14 +2,11 @@ from django.contrib import admin
 from django.contrib.auth.admin import UserAdmin as BaseUserAdmin
 from django.contrib.admin import ModelAdmin
 
-from .models.About import About
 from .models.Company import Company
 from .models.Device import Device
 from .models import User
 from .models.Allocation import Allocation
-from .models.Subdivision import Subdivision
-from .models.MachineStyle import MachineStyle
-from .models.MachineGroup import MachineGroup
+
 from .models.MachineType import MachineType
 from .models.MachineName import MachineName
 from .models.MachineControlMethod import MachineControlMethod
@@ -25,7 +22,7 @@ from django import forms
 
 admin.site.index_title = "Добро пожаловать в панель управления Master Plan"
 
-admin.site.register(About)
+
 admin.site.register(Company)
 admin.site.register(Device)
 
@@ -73,10 +70,10 @@ class UserAdmin(BaseUserAdmin):
 
 
 
-admin.site.register(Subdivision)
 
-admin.site.register(MachineStyle)
-admin.site.register(MachineGroup)
+
+
+
 admin.site.register(MachineType)
 admin.site.register(MachineName)
 admin.site.register(MachineControlMethod)

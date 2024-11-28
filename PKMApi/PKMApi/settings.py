@@ -81,6 +81,9 @@ INSTALLED_APPS = [
     # Company personal
     'subdivision',
 
+    # Machines
+    'machine_style',
+    'machine_group',
 ]
 
 

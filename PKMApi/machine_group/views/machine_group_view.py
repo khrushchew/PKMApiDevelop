@@ -2,27 +2,25 @@ from rest_framework.response import Response
 from rest_framework.viewsets import ViewSet
 from rest_framework.exceptions import NotFound, ValidationError
 
-from ..Serializers.MachineGroupSerializer import MachineGroupApiSerializer
+from machine_group.serializer.machine_group_create_serializer import MachineGroupCreateSerializer
+from machine_group.serializer.machine_group_list_serializer import MachineGroupListSerializer
+from machine_group.serializer.machine_group_retrieve_serializer import MachineGroupRetrieveSerializer
+from machine_group.serializer.machine_group_update_serializer import MachineGroupUpdateSerializer
 
 from Core.models.MachineStyle import MachineStyle
 
 from Core.models.MachineGroup import MachineGroup
 from Core.models.MachineName import MachineName
 
-class MachineGroupApiViewSet(ViewSet):
+class MachineGroupView(ViewSet):
 
     handler200 = Response(status=200)
-    handler201 = Response(status=201)
-    handler204 = Response(status=204)
+    handler201 = Response({'detail': 'Группа оборудования успешно создана'}, status=201)
     handler500 = Response({'error': 'Что-то пошло не так, повторите попытку позже'}, status=500)
-
-    def check_name(self):
-        if MachineGroup.objects.filter(style__company__code=self.kwargs.get('company_code'), style=self.request.data.get('style'), name=self.request.data.get('name')).exists():
-            raise ValidationError({'error': 'Группа оборудования с таким названием уже существует'})
 
     def get_machine_group_list(self):
 
-        filters = {"style__company__code": self.kwargs.get('company_code')}
+        filters = {"style__company": self.request.user.company}
 
         opt_filters = ["style"]
 
@@ -39,18 +37,18 @@ class MachineGroupApiViewSet(ViewSet):
 
     def get_machine_group_entity(self):
         try:
-            return MachineGroup.objects.get(style__company__code=self.kwargs.get('company_code'), pk=self.kwargs.get('pk'))
+            return MachineGroup.objects.get(style__company=self.request.user.company, pk=self.kwargs.get('pk'))
         except:
             raise NotFound({'error': 'Такого вида оборудования не найдено'})
 
     def create(self, request, *args, **kwargs):
         data = request.data
         
-        self.check_name()
+        serializer = MachineGroupCreateSerializer(data=data)
+        serializer.is_valid(raise_exception=True)
 
-        try:
-            serializer = MachineGroupApiSerializer(data=data)
-            serializer.is_valid(raise_exception=True)
+        try:    
+
             serializer.save()
             return self.handler201
         except:
@@ -60,15 +58,13 @@ class MachineGroupApiViewSet(ViewSet):
         
         machine_groups = self.get_machine_group_list()
         
+        serializer = MachineGroupListSerializer(machine_groups, many=True)
+        data = serializer.data
+        
+        for i in range(1, len(data)+1):
+            data[i-1]["indent"] = i
+            
         try:
-            serializer = MachineGroupApiSerializer(machine_groups, many=True)
-            data = serializer.data
-
-            for i in range(1, len(data)+1):
-                data[i-1].pop("style")
-                data[i-1]["indent"] = i
-                data[i-1]["count"] = MachineName.objects.filter(company__code=self.kwargs.get('company_code'), type__group__name=data[i-1]["name"]).count()
-
             return Response(data, status=200)
         except:
             return self.handler500
@@ -77,8 +73,9 @@ class MachineGroupApiViewSet(ViewSet):
         
         machine_group = self.get_machine_group_entity()
 
+        serializer = MachineGroupRetrieveSerializer(machine_group)
+
         try:
-            serializer = MachineGroupApiSerializer(machine_group)
             return Response(serializer.data, status=200)
         except:
             return self.handler500
@@ -87,12 +84,10 @@ class MachineGroupApiViewSet(ViewSet):
         
         machine_group = self.get_machine_group_entity()
 
-        self.check_name()
-        
-        try:
-            data = request.data
-            serializer = MachineGroupApiSerializer(machine_group, data=data, partial=True)
-            serializer.is_valid(raise_exception=True)
+        data = request.data
+        serializer = MachineGroupUpdateSerializer(machine_group, data=data, partial=True)
+        serializer.is_valid(raise_exception=True)
+        try:    
             serializer.save()
             return self.handler200
         except:
@@ -104,7 +99,7 @@ class MachineGroupApiViewSet(ViewSet):
 
         try:
             machine_group.delete()
-            return self.handler204
+            return self.handler200
         except:
             return self.handler500
         
