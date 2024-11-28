@@ -6,7 +6,7 @@ from drf_yasg.utils import swagger_auto_schema
 
 class AreaSwaggerView(AreaView):
     ACCESS_TOKEN_PARAM = openapi.Parameter(
-        'access_token',
+        'Authorization',
         openapi.IN_HEADER,
         description='Токен доступа',
         type=openapi.TYPE_STRING,

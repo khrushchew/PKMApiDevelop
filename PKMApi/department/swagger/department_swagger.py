@@ -8,7 +8,7 @@ from ..serializers.department_retrieve_serializer import DepartmentRetrieveSeria
 
 class DepartmentSwaggerView(DepartmentView):
     access_token_param = openapi.Parameter(
-        'access',
+        'Authorization',
         openapi.IN_HEADER,
         description="Код доступа",
         type=openapi.TYPE_STRING,

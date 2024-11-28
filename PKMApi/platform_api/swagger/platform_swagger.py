@@ -11,7 +11,7 @@ from ..serializers.platform_update_serializer import PlatformUpdateSerializer
 class PlatformSwaggerView(PlatformView):
 
     access_token_param = openapi.Parameter(
-        'access_token',
+        'Authorization',
         openapi.IN_HEADER,
         description='Токен доступа',
         type=openapi.TYPE_STRING,
