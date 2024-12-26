@@ -1,3 +1,5 @@
+from ..serializers.area_retrieve_serializer import AreaRetrieveSerializer
+from ..serializers.area_list_serializer import AreaListSerializer
 from area.serializers.area_create_serializer import AreaCreateSerializer
 from area.views.area_view import AreaView
 from drf_yasg import openapi
@@ -35,7 +37,7 @@ class AreaSwaggerView(AreaView):
         operation_description='Выводит список участков',
         manual_parameters=[ACCESS_TOKEN_PARAM],
         responses={
-            200: 'Успешный вывод списка участков',
+            200: AreaListSerializer(many=True),
             500: 'Ошибка сервера'
         }
     )
@@ -48,7 +50,7 @@ class AreaSwaggerView(AreaView):
         operation_description='Выводит определённый участок',
         manual_parameters=[ACCESS_TOKEN_PARAM],
         responses={
-            200: 'Успешный вывод определённого участка',
+            200: AreaRetrieveSerializer,
             500: 'Ошибка сервера'
         }
     )

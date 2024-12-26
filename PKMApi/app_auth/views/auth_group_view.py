@@ -41,14 +41,12 @@ class AuthGroupView(APIView):
         responses={
             200: openapi.Schema(
                 type=openapi.TYPE_OBJECT,
-                properties=
-            {
+                properties={
                 "groups": openapi.Schema(type=openapi.TYPE_ARRAY, description='Список групп', items=openapi.Items(type=openapi.TYPE_STRING)),
                 "start_shift": openapi.Schema(type=openapi.TYPE_STRING, description='Время начала смены'),
                 "end_shift": openapi.Schema(type=openapi.TYPE_STRING, description='Время конца смены'),
                 "time_now": openapi.Schema(type=openapi.TYPE_STRING, description='Текущее время'),
-            }       
-            ),
+            }),
             401: 'Ошибка входа'
         }
     )

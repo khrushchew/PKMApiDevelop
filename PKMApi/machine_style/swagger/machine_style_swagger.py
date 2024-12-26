@@ -5,7 +5,10 @@ from drf_yasg.utils import swagger_auto_schema
 from machine_style.views.machine_style_view import MachineStyleView
 
 from machine_style.serializers.machine_style_create_serializer import MachineStyleCreateSerializer
+from machine_style.serializers.machine_style_list_serializer import MachineStyleListSerializer
+from machine_style.serializers.machine_style_retrieve_serializer import MachineStyleRetrieveSerializer
 from machine_style.serializers.machine_style_update_serializer import MachineStyleUpdateSerializer
+
 
 
 class MachineStyleSwaggerView(MachineStyleView):
@@ -31,7 +34,7 @@ class MachineStyleSwaggerView(MachineStyleView):
             operation_description='Выводит список видов оборудования',
             manual_parameters=[ACCESS_TOKEN_PARAM],
             responses={
-                200: 'Успешная обработка запроса',
+                200: MachineStyleListSerializer(many=True),
                 400: 'Ошибка обработки запроса',
                 404: 'Не удалось найти оборудование',
                 500: 'Ошибка сервера'
@@ -46,7 +49,7 @@ class MachineStyleSwaggerView(MachineStyleView):
             operation_description='Выводит определённый вид оборудования',
             manual_parameters=[ACCESS_TOKEN_PARAM],
             responses={
-                200: 'Успешная обработка запроса',
+                200: MachineStyleRetrieveSerializer,
                 400: 'Ошибка обработки запроса',
                 404: 'Не удалось найти оборудование',
                 500: 'Ошибка сервера'

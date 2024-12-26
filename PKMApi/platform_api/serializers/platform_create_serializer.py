@@ -6,4 +6,4 @@ from Core.models.Platform import Platform
 class PlatformCreateSerializer(serializers.ModelSerializer):
     class Meta:
         model = Platform
-        fields = ('id', 'indent', 'name', 'address', 'company')
+        fields = ('pk', 'indent', 'name', 'address')

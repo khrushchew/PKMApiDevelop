@@ -5,6 +5,7 @@ services:
     build:
       context: ./PKMApi
       dockerfile: Dockerfile
+    image: khrushchew/pkm:web
     container_name: web_app
     volumes:
       - ./PKMApi:/usr/src/app
@@ -20,6 +21,7 @@ services:
     build:
       context: ./nginx
       dockerfile: Dockerfile
+    image: khrushchew/pkm:nginx
     container_name: nginx_server
     ports:
       - "80:70"

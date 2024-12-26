@@ -5,7 +5,7 @@ from platform_api.views.platform_view import PlatformView
 
 from ..serializers.platform_create_serializer import PlatformCreateSerializer
 from ..serializers.platform_update_serializer import PlatformUpdateSerializer
-
+from ..serializers.platform_list_serializer import PlatformListSerializer
 
 
 class PlatformSwaggerView(PlatformView):
@@ -41,7 +41,7 @@ class PlatformSwaggerView(PlatformView):
         operation_description= 'Выводит список площадок для определённой компании',
         manual_parameters=[access_token_param],
         responses={
-            200: "Вывод всех найденных площадок",
+            200: PlatformListSerializer(many=True),
             401: "Ошибка прав доступа",
             404: "Ни одной площадки не найдено",
             500: "Ошибка сервера"
@@ -56,7 +56,7 @@ class PlatformSwaggerView(PlatformView):
         operation_description= 'Выводит единственную площадку для определённой компании',
         manual_parameters=[access_token_param],
         responses={
-            200: "Вывод найденной площадок",
+            200: PlatformCreateSerializer,
             401: "Ошибка прав доступа",
             404: "Площадки не найдено",
             500: "Ошибка сервера"

@@ -6,6 +6,8 @@ from Core.models.Allocation import Allocation
 
 from django.contrib.auth.models import Group
 
+from drf_yasg.utils import swagger_serializer_method
+
 
 class PlatformListSerializer(serializers.ModelSerializer):
     machines = serializers.SerializerMethodField(method_name='get_machines')
@@ -15,10 +17,12 @@ class PlatformListSerializer(serializers.ModelSerializer):
     class Meta:
         model = Platform
         fields = ('pk', 'indent', 'name', 'address', 'machines', 'masters', 'operators')
-    
+
+    @swagger_serializer_method(serializer_or_field=serializers.IntegerField)
     def get_machines(self, obj):
         return MachineName.objects.filter(area__department__platform=obj).count()
     
+    @swagger_serializer_method(serializer_or_field=serializers.IntegerField)
     def get_masters(self, obj):
         try:
             master = Allocation.objects.filter(group__name='Мастер', platform=obj)
@@ -26,6 +30,7 @@ class PlatformListSerializer(serializers.ModelSerializer):
             return 0
         return master.values('user').distinct().count()
     
+    @swagger_serializer_method(serializer_or_field=serializers.IntegerField)
     def get_operators(self, obj):
         try:
             operator = Allocation.objects.filter(group__name='Оператор', platform=obj)

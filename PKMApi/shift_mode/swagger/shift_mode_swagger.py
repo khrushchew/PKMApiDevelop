@@ -29,7 +29,7 @@ class ShiftModeSwaggerView(ShiftModeView):
             operation_description='Выводит список режимов сменности',
             manual_parameters=[ACCESS_TOKEN_PARAM],
             responses={
-                200: 'Успешная обработка запроса',
+                200: ShiftModeListSerializer(many=True),
                 400: 'Ошибка при обработке запроса',
                 500: 'Ошибка сервера'
             }

@@ -5,6 +5,7 @@ from department.views.department_view import DepartmentView
 
 from ..serializers.department_create_serializer import DepartmentCreateSerializer
 from ..serializers.department_retrieve_serializer import DepartmentRetrieveSerializer
+from ..serializers.department_list_serializer import DepartmentListSerializer
 
 class DepartmentSwaggerView(DepartmentView):
     access_token_param = openapi.Parameter(
@@ -37,7 +38,7 @@ class DepartmentSwaggerView(DepartmentView):
         operation_description='Выводит список цехов для определённой компании',
         manual_parameters=[access_token_param],
         responses={
-            200: "Вывод всех найденных цехов",
+            200: DepartmentListSerializer(many=True),
             400: "Ошибка при обработке запроса",
             401: "Ошибка прав доступа",
             404: "Не найдено ни одного цеха",
@@ -54,7 +55,7 @@ class DepartmentSwaggerView(DepartmentView):
         operation_description='Выводит определённый цех для определённой компании',
         manual_parameters=[access_token_param],
         responses={
-            200: "Вывод найденного цехов",
+            200: DepartmentRetrieveSerializer,
             400: "Ошибка при обработке запроса",
             401: "Ошибка прав доступа",
             404: "Не найдено такого цеха",

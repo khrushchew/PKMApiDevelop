@@ -3,8 +3,8 @@ from drf_yasg.utils import swagger_auto_schema
 from Core.swagger_params import ACCESS_TOKEN_PARAM
 
 from subdivision.serializers.subdivision_create_serializer import SubdivisionCreateSerializer
-
-from subdivision.serializers.subdivision_create_serializer import SubdivisionCreateSerializer
+from subdivision.serializers.subdivision_list_serializer import SubdivisionListSerializer
+from subdivision.serializers.subdivision_retrieve_serializer import SubdivisionRetrieveSerializer
 from subdivision.serializers.subdivision_update_serializer import SubdivisionUpdateSerializer
 
 from subdivision.views.subdivision_view import SubdivisionView
@@ -32,7 +32,7 @@ class SubdivisionSwaggerView(SubdivisionView):
         operation_description='Выводит список подразделений для определённой компании',
         manual_parameters=[ACCESS_TOKEN_PARAM],
         responses={
-            200: "Успешная обработка запроса",
+            200: SubdivisionListSerializer(many=True),
             400: "Ошибка при обработке запроса",
             500: "Ошибка сервера",
         }
@@ -47,7 +47,7 @@ class SubdivisionSwaggerView(SubdivisionView):
         operation_description='Выводит определённое подразделение для определённой компании',
         manual_parameters=[ACCESS_TOKEN_PARAM],
         responses={
-            200: "Успешная обработка запроса",
+            200: SubdivisionRetrieveSerializer,
             400: "Ошибка при обработке запроса",
             500: "Ошибка сервера",
         }

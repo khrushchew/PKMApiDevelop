@@ -264,6 +264,9 @@ SESSION_COOKIE_AGE = 86400  # 1 день
 SESSION_EXPIRE_AT_BROWSER_CLOSE = True  # Сессия заканчивается при закрытии браузера
 SESSION_SAVE_EVERY_REQUEST = True  # Сохраняем сессию при каждом запросе
 
+# SWAGGER_SETTINGS = {
+#     "DEFAULT_MODEL_RENDERING": "example"
+# }
 
 # from pythonjsonlogger.jsonlogger import JsonFormatter
 # from app_auth.json_formatters.device_json_formatter import DeviceJsonFormatter

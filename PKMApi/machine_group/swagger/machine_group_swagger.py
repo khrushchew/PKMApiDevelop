@@ -4,9 +4,11 @@ from Core.swagger_params import ACCESS_TOKEN_PARAM, MACHINE_STYLE_PARAM
 
 from machine_group.views.machine_group_view import MachineGroupView
 
-from machine_group.serializer.machine_group_create_serializer import MachineGroupCreateSerializer
-from machine_group.serializer.machine_group_update_serializer import MachineGroupUpdateSerializer
 
+from machine_group.serializer.machine_group_create_serializer import MachineGroupCreateSerializer
+from machine_group.serializer.machine_group_list_serializer import MachineGroupListSerializer
+from machine_group.serializer.machine_group_retrieve_serializer import MachineGroupRetrieveSerializer
+from machine_group.serializer.machine_group_update_serializer import MachineGroupUpdateSerializer
 
 class MachineGroupSwaggerView(MachineGroupView):
     @swagger_auto_schema(
@@ -31,7 +33,7 @@ class MachineGroupSwaggerView(MachineGroupView):
             operation_description='Выводит список групп оборудования',
             manual_parameters=[ACCESS_TOKEN_PARAM, MACHINE_STYLE_PARAM],
             responses={
-                200: 'Успешная обработка запроса',
+                200: MachineGroupListSerializer(many=True),
                 400: 'Ошибка обработки запроса',
                 404: 'Не удалось найти оборудование',
                 500: 'Ошибка сервера'
@@ -46,7 +48,7 @@ class MachineGroupSwaggerView(MachineGroupView):
             operation_description='Выводит определённую группу оборудования',
             manual_parameters=[ACCESS_TOKEN_PARAM],
             responses={
-                200: 'Успешная обработка запроса',
+                200: MachineGroupRetrieveSerializer,
                 400: 'Ошибка обработки запроса',
                 404: 'Не удалось найти оборудование',
                 500: 'Ошибка сервера'
