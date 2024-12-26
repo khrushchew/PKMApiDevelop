@@ -13,6 +13,9 @@ from ..serializers.auth_group_serializer import AuthGroupSerializer
 
 from django.utils import timezone
 
+import logging
+logger = logging.getLogger('auth_group')
+
 
 class AuthGroupView(APIView):
 
@@ -36,7 +39,16 @@ class AuthGroupView(APIView):
         operation_description='Получает все доступные группы пользователя',
         manual_parameters=[access_token_param],
         responses={
-            200: 'Вывод групп пользователя',
+            200: openapi.Schema(
+                type=openapi.TYPE_OBJECT,
+                properties=
+            {
+                "groups": openapi.Schema(type=openapi.TYPE_ARRAY, description='Список групп', items=openapi.Items(type=openapi.TYPE_STRING)),
+                "start_shift": openapi.Schema(type=openapi.TYPE_STRING, description='Время начала смены'),
+                "end_shift": openapi.Schema(type=openapi.TYPE_STRING, description='Время конца смены'),
+                "time_now": openapi.Schema(type=openapi.TYPE_STRING, description='Текущее время'),
+            }       
+            ),
             401: 'Ошибка входа'
         }
     )
@@ -45,6 +57,7 @@ class AuthGroupView(APIView):
         user = request.user
         
         if user.session:
+            logger.warning(f"Пользователь {request.user.username} попытался войти в приложение, но у него есть активные сеансы", extra={'username': request.user.username})
             raise AuthenticationFailed({'detail': 'Такой пользователь уже активен на другом устройстве'})
 
         user.session = True
@@ -59,6 +72,8 @@ class AuthGroupView(APIView):
             end_shift = user.end_shift.strftime('%d-%m-%Y %H:%M:%S')
         else:
             end_shift = None
+
+        logger.info(f"Пользователь {request.user.username} вошёл в приложение", extra={'username': request.user.username})
 
         return Response({
                 'groups': [group.name for group in user.groups.all()],

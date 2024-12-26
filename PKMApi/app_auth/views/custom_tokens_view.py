@@ -2,6 +2,8 @@ from drf_yasg.utils import swagger_auto_schema
 from drf_yasg import openapi
 from rest_framework_simplejwt.views import TokenObtainPairView, TokenRefreshView
 
+import logging
+logger = logging.getLogger('auth_user')
 
 class CustomTokenObtainPairView(TokenObtainPairView):
     @swagger_auto_schema(
@@ -28,6 +30,7 @@ class CustomTokenObtainPairView(TokenObtainPairView):
         }
     )
     def post(self, request, *args, **kwargs):
+        logger.info(f'Пользователь входит в систему под именем {request.data.get("username")}', extra={'username': request.data.get("username")})
         return super().post(request, *args, **kwargs)
 
 class CustomTokenRefreshView(TokenRefreshView):

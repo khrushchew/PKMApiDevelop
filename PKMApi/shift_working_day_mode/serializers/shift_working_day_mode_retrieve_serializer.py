@@ -6,7 +6,7 @@ from Core.models.ShiftWorkingDayMode import ShiftWorkingDayMode
 class ShiftWorkingDayModeRetrieveSerializer(serializers.ModelSerializer):
     class Meta:
         model = ShiftWorkingDayMode
-        fields = ('pk', 'code', 'name', 'company', 'start_time', 'end_time', 
+        fields = ('pk', 'code', 'name', 'start_time', 'end_time', 
                   'start_pause_1', 'end_pause_1',
                   'start_pause_2', 'end_pause_2',
                   'start_pause_3', 'end_pause_3',

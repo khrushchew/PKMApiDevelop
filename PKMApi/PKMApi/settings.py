@@ -38,13 +38,13 @@ MEDIA_URL = MEDIA_URL
 SECRET_KEY = SECRET_KEY
 
 # SECURITY WARNING: don't run with debug turned on in production!
-DEBUG = False
+DEBUG = True
 
-ALLOWED_HOSTS = ["www.api.dev.pkmt.tech", "api.dev.pkmt.tech", "*"]
-
+# ALLOWED_HOSTS = ["www.api.dev.pkmt.tech", "api.dev.pkmt.tech", "*"]
+ALLOWED_HOSTS = ["api.dev.pkmt.tech", "www.api.dev.pkmt.tech", "*"]
+CSRF_TRUSTED_ORIGINS = ["http://api.dev.pkmt.tech", "http://www.api.dev.pkmt.tech"]
 
 # Application definition
-
 INSTALLED_APPS = [
     'django.contrib.admin',
     'django.contrib.auth',
@@ -73,6 +73,7 @@ INSTALLED_APPS = [
     # Shift
     'shift',
     'shift_working_day_mode',
+    'shift_mode',
 
     # Company Work Structure 
     'platform_api',
@@ -159,7 +160,7 @@ DATABASES = {
 }
 
 STATIC_URL = '/static/'
-STATIC_ROOT = '/home/master_plan/api-dev/PKMApi/static/'
+STATIC_ROOT = BASE_DIR / 'static'
 
 # Password validation
 # https://docs.djangoproject.com/en/5.1/ref/settings/#auth-password-validators
@@ -220,8 +221,8 @@ AUTH_USER_MODEL = 'Core.User'
 
 # Settings of token
 SIMPLE_JWT = {
-    "ACCESS_TOKEN_LIFETIME": timedelta(minutes=120),
-    "REFRESH_TOKEN_LIFETIME": timedelta(days=7),
+    "ACCESS_TOKEN_LIFETIME": timedelta(days=7),
+    "REFRESH_TOKEN_LIFETIME": timedelta(minutes=5),
     "ROTATE_REFRESH_TOKENS": False,
     "BLACKLIST_AFTER_ROTATION": False,
     "UPDATE_LAST_LOGIN": False,
@@ -262,3 +263,69 @@ SIMPLE_JWT = {
 SESSION_COOKIE_AGE = 86400  # 1 день
 SESSION_EXPIRE_AT_BROWSER_CLOSE = True  # Сессия заканчивается при закрытии браузера
 SESSION_SAVE_EVERY_REQUEST = True  # Сохраняем сессию при каждом запросе
+
+
+# from pythonjsonlogger.jsonlogger import JsonFormatter
+# from app_auth.json_formatters.device_json_formatter import DeviceJsonFormatter
+# from app_auth.json_formatters.auth_user_json_formatter import AuthUserJsonFormatter
+# from app_auth.json_formatters.auth_group_json_formatter import AuthGroupJsonFormatter
+
+# LOGGING = {
+#     "version": 1,
+#     "disable_existing_loggers": False,
+
+#     'formatters': {
+#         'device_formatter': {
+#             '()': DeviceJsonFormatter,
+#             'json_ensure_ascii': False,
+#             'json_indent': 4,
+#         },
+#         'auth_user_formater': {
+#             '()': AuthUserJsonFormatter,
+#             'json_ensure_ascii': False,
+#             'json_indent': 4,
+#         },
+#         'auth_group_formatter': {
+#             '()': AuthGroupJsonFormatter,
+#             'json_ensure_ascii': False,
+#             'json_indent': 4,
+#         }
+#     },
+
+#     "handlers": {
+#         "device_file": {
+#             'class': 'logging.FileHandler',
+#             'formatter': 'device_formatter',
+#             'filename': 'devices.log',
+#         },
+#         "auth_user_file": {
+#             'class': 'logging.FileHandler',
+#             'formatter': 'auth_user_formater',
+#             'filename': 'auth_users.log',
+#         },
+#         "auth_group_file": {
+#             'class': 'logging.FileHandler',
+#             'formatter': 'auth_group_formatter',
+#             'filename': 'auth_groups.log',  
+#         }
+#     },
+
+#     'loggers': {
+#         "device": {
+#             "handlers": ['device_file'],
+#             "level": 'INFO',
+#             "propagate": False,
+#         },
+#         "auth_user": {
+#             "handlers": ['auth_user_file'],
+#             "level": 'INFO',
+#             "propagate": False,
+#         },
+#         "auth_group":{
+#             "handlers": ['auth_group_file'],
+#             "level": 'INFO',
+#             "propagate": False,
+#         }
+#     }
+    
+# }

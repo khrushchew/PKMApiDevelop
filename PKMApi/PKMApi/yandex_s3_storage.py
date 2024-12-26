@@ -5,3 +5,8 @@ from .config import AWS_STORAGE_BUCKET_NAME
 class ClientImgStorage(S3Boto3Storage):
     bucket_name = AWS_STORAGE_BUCKET_NAME
     file_overwrite = False
+
+class S3LogStorage(S3Boto3Storage):
+    bucket_name = AWS_STORAGE_BUCKET_NAME
+    location = "logs"
+    file_overwrite = False

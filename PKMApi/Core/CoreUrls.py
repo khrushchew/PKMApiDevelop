@@ -35,6 +35,9 @@ urlpatterns=[
     # MachineStyle
     path('machine_styles/', include('machine_style.urls')),
 
+    # MachineGroup
+    path('machine_groups/', include('machine_group.urls')),
+
     # Role
     # path('', include(role_router.urls)),
 
@@ -42,15 +45,14 @@ urlpatterns=[
     path('shift_working_day_modes/', include('shift_working_day_mode.urls')),
 
     # ShiftMode
-    # path('<str:company_code>/', include(shift_mode_router.urls)),
+    path('shift_modes/', include('shift_mode.urls')),
 
     # ShiftCalendar
     # path('<str:company_code>/', include(shift_calendar_router.urls)),
 
 
 
-    # MachineGroup
-    path('machine_groups/', include('machine_group.urls')),
+    
 
     # MachineType
     # path('<str:company_code>/', include(machine_type_router.urls)),

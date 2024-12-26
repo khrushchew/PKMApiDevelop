@@ -11,9 +11,9 @@ from .models.MachineType import MachineType
 from .models.MachineName import MachineName
 from .models.MachineControlMethod import MachineControlMethod
 from .models.ShiftDay import ShiftDay
-from .models.ShiftWorkingDayMode import ShiftWorkingDayMode
+
 from .models.ShiftMode import ShiftMode
-from .models.ShiftCalendar import ShiftCalendar
+from .models.ShiftModeCalendar import ShiftModeCalendar
 from .models.Shift import Shift
 
 from .models.Brigade import Brigade
@@ -79,8 +79,8 @@ admin.site.register(MachineName)
 admin.site.register(MachineControlMethod)
 
 admin.site.register(ShiftDay)
-admin.site.register(ShiftWorkingDayMode)
-admin.site.register(ShiftCalendar)
+
+admin.site.register(ShiftModeCalendar)
 admin.site.register(ShiftMode)
 
 admin.site.register(Brigade)

@@ -2,25 +2,37 @@ version: '3.8'
 
 services:
   web:
-    build: ./PKMApi  # путь к вашему Dockerfile
-    command: python manage.py runserver 0.0.0.0:8000  # запуск приложения
+    build:
+      context: ./PKMApi
+      dockerfile: Dockerfile
+    container_name: web_app
     volumes:
-      - ./PKMApi:/usr/src/app  # монтирование директории с приложением
-    ports:
-      - 8000:8000  # проброс порта для веб-приложения
+      - ./PKMApi:/usr/src/app
+      - static_volume:/usr/src/app/static
+    expose:
+      - 1000
     env_file:
-      - ./PKMApi/PKMApi/.env  # файл с переменными окружения
-    depends_on:
-      - db  # контейнер с базой данных должен запускаться первым
+      - ./PKMApi/PKMApi/.env
+    networks:
+      - app_network
 
-  db:
-    image: postgres:13.0-alpine  # используем официальный образ PostgreSQL
+  nginx:
+    build:
+      context: ./nginx
+      dockerfile: Dockerfile
+    container_name: nginx_server
+    ports:
+      - "80:70"
+    depends_on:
+      - web
     volumes:
-      - postgres_data:/var/lib/postgresql/data/  # сохраняем данные базы
-    environment:
-      - POSTGRES_USER=postgres  # пользователь базы данных
-      - POSTGRES_PASSWORD=12345678  # пароль
-      - POSTGRES_DB=main_db  # имя базы данных
+      - static_volume:/usr/src/app/static
+    networks:
+      - app_network
+
+networks:
+  app_network:
+    driver: bridge
 
 volumes:
-  postgres_data:  # том для хранения данных базы
+  static_volume:

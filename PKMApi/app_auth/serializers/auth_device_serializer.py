@@ -5,4 +5,4 @@ from Core.models.Device import Device
 class AuthDeviceSerializer(serializers.ModelSerializer):
     class Meta:
         model = Device
-        fields = ('company', 'code',)
+        fields = ('code',)
